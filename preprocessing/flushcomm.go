@@ -5,96 +5,126 @@ import (
 	"errors"
 	"os/exec"
 	"regexp"
+	"sort"
+	"time"
 )
 
-// FlushCommands erase all the invalid commands through various methods
-func FlushCommands(commands []Command, methods []func([]Command) []Command) []Command {
-	for _, method := range methods {
-		commands = method(commands)
+// NOTFOUNDREG is the regular expression to test whether command executed properly
+const NOTFOUNDREG = "((.*)[Cc]ommand(.*)not found(.*))|((.*)No such file or directory(.*))"
+
+//MANENTRYREG is the regular expression to test whether "man `Command`" executed properly
+const MANENTRYREG = "No manual entry for (.*)"
+
+// Filter defines filter function to clean invalid commadns or ops given by file or net
+type Filter func([]Command) []Command
+
+//IntSlice includes a list of n array in order to use sort.Sort() method to sort n
+type IntSlice []int
+
+func (s IntSlice) Len() int           { return len(s) }
+func (s IntSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s IntSlice) Less(i, j int) bool { return s[i] > s[j] }
+
+// FlushCommands erase all the invalid commands through various filters
+func FlushCommands(commands []Command, filters []Filter) []Command {
+	for _, filter := range filters {
+		commands = filter(commands)
 	}
 	return commands
 }
 
+// removeOneCommand removes only one command from the list given the index
 func removeOneCommand(commands []Command, n int) []Command {
 	return append(commands[:n], commands[n+1:]...)
 }
 
 // removeCommands removes a list of commands using index
 // make sure n is an ordered array
-func removeCommands(commands []Command, n []int) []Command {
+func removeCommands(commands []Command, n IntSlice) []Command {
 	if len(n) == 0 {
 		return commands
 	}
-	if len(n) == 1 {
-		return removeOneCommand(commands, n[0])
-	}
-	if n[0] > n[len(n)-1] {
-		for i := range n {
-			commands = removeOneCommand(commands, n[i])
-		}
-	} else {
-		for i := range n {
-			commands = removeOneCommand(commands, n[len(n)-1-i])
-		}
+	sort.Sort(n)
+	for i := range n {
+		commands = removeOneCommand(commands, n[i])
 	}
 	return commands
 }
 
 // SimpleCommandFilter tries to run command without any flag to see whether this command can be run properly
 func SimpleCommandFilter(commands []Command) []Command {
-	return cmdsFilter(commands, func(command string) error {
-		if commandValiderWithFlags(command, "") != nil {
-			return errors.New("command not found or not in $PATH or directory")
-		}
-		return nil
+	return cmdFilter(commands, func(command string) error {
+		return commandChecker(command, "", NOTFOUNDREG)
 	})
 }
 
 // HelpCommandFilter tries to use "`Command` --help", "`Command` -h" and "`Command` help" to judge `Command` is valid or not
 func HelpCommandFilter(commands []Command) []Command {
-	return cmdsFilter(commands, func(command string) error {
-		if commandValiderWithFlags(command, "--help") != nil &&
-			commandValiderWithFlags(command, "help") != nil &&
-			commandValiderWithFlags(command, "-h") != nil {
+	return cmdFilter(commands, func(command string) error {
+		if commandChecker(command, "--help", NOTFOUNDREG) != nil &&
+			commandChecker(command, "help", NOTFOUNDREG) != nil &&
+			commandChecker(command, "-h", NOTFOUNDREG) != nil {
 			return errors.New("command not found or not in $PATH or directory")
 		}
 		return nil
 	})
 }
 
-func commandValiderWithFlags(command string, flag string) error {
-	compile, _ := regexp.Compile("((.*)[Cc]ommand(.*)not found(.*))|((.*)No such file or directory(.*))")
+// ManCommandFilter tries to use "man `Command`" cmd to judge `Command` is valid or not
+func ManCommandFilter(commands []Command) []Command {
+	return cmdFilter(commands, func(command string) error {
+		return commandChecker("man", command, MANENTRYREG)
+	})
+}
+
+func commandChecker(command, flag, reg string) error {
+	compile, _ := regexp.Compile(reg)
 	var (
 		stderr bytes.Buffer
 		stdout bytes.Buffer
 	)
-
-	cmd := exec.Command("bash", "-c", command, flag)
+	cmd := exec.Command(command, flag)
 	cmd.Stderr = &stderr
 	cmd.Stdout = &stdout
-	if err := cmd.Run(); err != nil {
-		errString := stderr.String()
-		outString := stdout.String()
-		if compile.MatchString(errString) || compile.MatchString(outString) {
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	// Wait for the process to finish or kill it after a timeout (whichever happens first):
+	done := make(chan error, 1)
+	go func() {
+		done <- cmd.Wait()
+	}()
+	select {
+	case <-time.After(400 * time.Millisecond):
+		if err := cmd.Process.Kill(); err != nil {
 			return err
+		}
+	case err := <-done:
+		if err != nil {
+			if compile.MatchString(stderr.String()) || compile.MatchString(stdout.String()) {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
-// ManCommandFilter tries to use "man `Command`" cmd to judge `Command` is valid or not
-func ManCommandFilter(commands []Command) []Command {
-	return cmdsFilter(commands, func(command string) error {
-		cmd := exec.Command("man", command)
-		return cmd.Run()
-	})
+type errorNum struct {
+	err error
+	num int
 }
 
-func cmdsFilter(commands []Command, cmds func(string) error) []Command {
+func cmdFilter(commands []Command, cmd func(string) error) []Command {
 	var invalidNum []int
+	ec := make(chan errorNum, 1)
 	for commNum, command := range commands {
-		if err := cmds(command.command); err != nil {
-			invalidNum = append(invalidNum, commNum)
+		go func(command string, commNum int) {
+			ec <- errorNum{cmd(command), commNum}
+		}(command.command, commNum)
+	}
+	for range commands {
+		if e, ok := <-ec; ok && e.err != nil {
+			invalidNum = append(invalidNum, e.num)
 		}
 	}
 	return removeCommands(commands, invalidNum)

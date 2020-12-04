@@ -30,7 +30,7 @@ func GetCommands(file string, url string) []Command {
 		log.Fatal(err)
 	}
 	log.Fatal(fmt.Errorf("cannot get commands from both file or net"))
-	return nil
+	return []Command{}
 }
 
 func getCommandsFromFile(f string, size int) ([]Command, error) {
