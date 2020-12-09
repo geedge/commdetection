@@ -1,3 +1,12 @@
+/*
+ * @Author: EnderByEndera
+ * @Date: 2020-12-07 09:22:53
+ * @LastEditTime: 2020-12-07 14:59:59
+ * @LastEditors: Please set LastEditors
+ * @Description: this file flushes invalid commands using various types of filters
+ * @FilePath: /commdetection/commflush.go
+ */
+
 package preprocessing
 
 import (
@@ -25,6 +34,11 @@ func (s IntSlice) Len() int           { return len(s) }
 func (s IntSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s IntSlice) Less(i, j int) bool { return s[i] > s[j] }
 
+type errorNum struct {
+	err error
+	num int
+}
+
 // FlushCommands erase all the invalid commands through various filters
 func FlushCommands(commands []Command, filters []Filter) []Command {
 	for _, filter := range filters {
@@ -39,7 +53,6 @@ func removeOneCommand(commands []Command, n int) []Command {
 }
 
 // removeCommands removes a list of commands using index
-// make sure n is an ordered array
 func removeCommands(commands []Command, n IntSlice) []Command {
 	if len(n) == 0 {
 		return commands
@@ -109,18 +122,13 @@ func commandChecker(command, flag, reg string) error {
 	return nil
 }
 
-type errorNum struct {
-	err error
-	num int
-}
-
 func cmdFilter(commands []Command, cmd func(string) error) []Command {
 	var invalidNum []int
 	ec := make(chan errorNum, 1)
 	for commNum, command := range commands {
 		go func(command string, commNum int) {
 			ec <- errorNum{cmd(command), commNum}
-		}(command.command, commNum)
+		}(command.CommName, commNum)
 	}
 	for range commands {
 		if e, ok := <-ec; ok && e.err != nil {

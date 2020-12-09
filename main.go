@@ -1,6 +1,8 @@
 package main
 
-import prep "commdetection/preprocessing"
+import (
+	prep "commdetection/preprocessing"
+)
 
 func main() {
 	filters := []prep.Filter{prep.HelpCommandFilter}
