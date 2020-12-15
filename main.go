@@ -1,11 +1,18 @@
+/*
+ * @Author: your name
+ * @Date: 2020-12-04 15:03:24
+ * @LastEditTime: 2020-12-15 11:46:55
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /commdetection/main.go
+ */
 package main
 
 import (
-	prep "commdetection/preprocessing"
+	"commdetection/yaml"
+	"fmt"
 )
 
 func main() {
-	filters := []prep.Filter{prep.HelpCommandFilter}
-	commands := prep.GetCommands("/root/.bash_history", "")
-	commands = prep.FlushCommands(commands, filters)
+	fmt.Println(yaml.GetYamlSetting("commrule"))
 }

@@ -1,0 +1,4 @@
+paths:
+  multirulespath: rules/rulesjson/rules.json
+  commrulepath: rules/rulesjson/commrules.json
+  pathrulepath: rules/rulesjson/pathrules.json
