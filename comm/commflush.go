@@ -1,13 +1,13 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-07 09:22:53
- * @LastEditTime: 2020-12-07 14:59:59
+ * @LastEditTime: 2020-12-19 10:42:51
  * @LastEditors: Please set LastEditors
  * @Description: this file flushes invalid commands using various types of filters
  * @FilePath: /commdetection/commflush.go
  */
 
-package preprocessing
+package comm
 
 import (
 	"bytes"
@@ -74,9 +74,7 @@ func SimpleCommandFilter(commands []Command) []Command {
 // HelpCommandFilter tries to use "`Command` --help", "`Command` -h" and "`Command` help" to judge `Command` is valid or not
 func HelpCommandFilter(commands []Command) []Command {
 	return cmdFilter(commands, func(command string) error {
-		if commandChecker(command, "--help", NOTFOUNDREG) != nil &&
-			commandChecker(command, "help", NOTFOUNDREG) != nil &&
-			commandChecker(command, "-h", NOTFOUNDREG) != nil {
+		if commandChecker(command, "--help", NOTFOUNDREG) != nil {
 			return errors.New("command not found or not in $PATH or directory")
 		}
 		return nil
@@ -87,6 +85,13 @@ func HelpCommandFilter(commands []Command) []Command {
 func ManCommandFilter(commands []Command) []Command {
 	return cmdFilter(commands, func(command string) error {
 		return commandChecker("man", command, MANENTRYREG)
+	})
+}
+
+// WhichCommandFilter tries to use "which `Command`" cmd to judge `Command` is valid or not
+func WhichCommandFilter(commands []Command) []Command {
+	return cmdFilter(commands, func(command string) error {
+		return commandChecker("which", command, "")
 	})
 }
 

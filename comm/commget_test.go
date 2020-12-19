@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2020-12-02 17:09:14
- * @LastEditTime: 2020-12-09 10:26:20
+ * @LastEditTime: 2020-12-19 10:42:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/preprocessing/commget_test.go
  */
-package preprocessing
+package comm
 
 import (
 	"testing"

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-09 16:44:44
- * @LastEditTime: 2020-12-15 11:52:42
+ * @LastEditTime: 2020-12-19 10:48:31
  * @LastEditors: Please set LastEditors
  * @Description: Init settings from yaml file
  * @FilePath: /commdetection/init/init.go
@@ -10,8 +10,8 @@
 package yaml
 
 import (
+	"commdetection/logger"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -27,18 +27,28 @@ type Conf struct {
 	}
 }
 
-// GetYamlSetting gets the yaml settings from conf.yaml
-func GetYamlSetting(settingName string) (c string) {
-	conf := new(Conf)
+var conf *Conf
+
+// InitYamlSetting initializes the yaml setting configuration
+func InitYamlSetting() error {
+	conf = new(Conf)
 	buf, err := ioutil.ReadFile(filepath.Join(os.Getenv("COMMDEPATH"), "conf.yaml"))
 	if err != nil {
-		log.Println("read yaml file failed, return NULL string")
-		return ""
+		logger.Warnln("read yaml file failed, return NULL string")
+		return err
 	}
 	err = yaml.Unmarshal(buf, conf)
 	if err != nil {
-		log.Println("Unmarshal yaml file failed, please check conf.yaml, return NULL string")
-		return ""
+		logger.Warnln("Unmarshal yaml file failed, please check conf.yaml, return NULL string")
+		return err
+	}
+	return nil
+}
+
+// GetYamlSetting gets the yaml settings from conf.yaml
+func GetYamlSetting(settingName string) (c string) {
+	if conf == nil {
+		InitYamlSetting()
 	}
 	switch settingName {
 	case "commrules":
@@ -49,6 +59,7 @@ func GetYamlSetting(settingName string) (c string) {
 		c = filepath.Join(os.Getenv("COMMDEPATH"), conf.Paths.MultiRulesPath)
 	default:
 		c = os.Getenv("COMMDEPATH")
+		logger.Warnln("Didn't get any setting, use default value: " + os.Getenv("COMMDEPATH"))
 	}
 	return
 }

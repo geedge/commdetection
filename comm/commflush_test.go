@@ -1,4 +1,4 @@
-package preprocessing
+package comm
 
 import (
 	"fmt"
@@ -175,7 +175,7 @@ func TestFlushCommands(t *testing.T) {
 
 func BenchmarkFlushCommands(b *testing.B) {
 	b.Run("FlushCommands BenchMark Test", func(b *testing.B) {
-		filters := []Filter{SimpleCommandFilter, HelpCommandFilter, ManCommandFilter}
+		filters := []Filter{WhichCommandFilter}
 		commands := GetCommands("/root/.bash_history", "")
 		b.ResetTimer()
 		commands = FlushCommands(commands, filters)

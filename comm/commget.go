@@ -1,18 +1,17 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2020-12-09 10:27:45
+ * @LastEditTime: 2020-12-19 10:47:41
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
  */
 
-package preprocessing
+package comm
 
 import (
-	"fmt"
+	"commdetection/logger"
 	"io/ioutil"
-	"log"
 	"reflect"
 	"strings"
 )
@@ -30,16 +29,16 @@ func GetCommands(file string, url string) []Command {
 		if err == nil {
 			return commands
 		}
-		log.Print(err)
+		logger.Warnln(err)
 	}
 	if url != "" {
 		commands, err := getCommandsFromNet(url)
 		if err == nil {
 			return commands
 		}
-		log.Print(err)
+		logger.Warnln(err)
 	}
-	log.Print(fmt.Errorf("cannot get commands from any file or net"))
+	logger.Warnln("cannot get commands from any file or net")
 	return []Command{}
 }
 

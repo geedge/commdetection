@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:09
- * @LastEditTime: 2020-12-15 15:57:32
+ * @LastEditTime: 2020-12-19 10:44:44
  * @LastEditors: Please set LastEditors
  * @Description: Test commrules.go
  * @FilePath: /commdetection/rules/commrules_test.go
@@ -9,7 +9,7 @@
 package rules
 
 import (
-	"commdetection/preprocessing"
+	"commdetection/comm"
 	"fmt"
 	"testing"
 )
@@ -57,7 +57,7 @@ func TestRule(t *testing.T) {
 			}
 		}
 		cs := CommScore{
-			Command: preprocessing.Command{CommName: "wget"},
+			Command: comm.Command{CommName: "wget"},
 			Score:   100,
 		}
 		for _, rule := range r {
@@ -118,9 +118,37 @@ func TestRule(t *testing.T) {
 				RuleFunc: "EvaluateCommandRule",
 			},
 		}
-		err := MarshalRules(rs)
+		err := marshalRules(rs)
 		if err != nil {
 			t.Error(err)
 		}
 	})
+}
+
+func TestInitCommScores(t *testing.T) {
+	comms := comm.GetCommands("/root/.bash_history", "")
+	comms = comm.FlushCommands(comms, []comm.Filter{comm.ManCommandFilter})
+	css := InitCommScores(comms)
+	fmt.Println(css)
+}
+
+func TestEvaluateCommScore(t *testing.T) {
+	css := EvaluateCommScore([]CommScore{
+		{
+			Command: comm.Command{
+				CommName: "wget",
+				Flags:    []string{""},
+			},
+			Score: 100,
+		},
+	},
+		Rules{
+			Rule{
+				Name:     "RuleA",
+				RuleFunc: "EvaluateCommandRule",
+			},
+		})
+	if css[0].Score != 80.0 {
+		t.Errorf("Wrong Score")
+	}
 }
