@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-18 16:16:09
- * @LastEditTime: 2020-12-22 16:23:11
+ * @LastEditTime: 2020-12-23 08:55:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/commlog/commlog.go
@@ -24,7 +24,7 @@ var (
 func init() {
 	formatter := &logrus.TextFormatter{
 		FullTimestamp:   true,
-		TimestampFormat: "2006-01-02 15:03:04",
+		TimestampFormat: "2006-01-02 15:04:05",
 	}
 	logger.SetFormatter(formatter)
 	logger.SetLevel(LogLevel)

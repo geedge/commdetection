@@ -137,7 +137,7 @@ func TestEvaluateCommScore(t *testing.T) {
 		{
 			Command: comm.Command{
 				CommName: "wget",
-				Flags:    []string{""},
+				Args:     []string{""},
 			},
 			Score: 100,
 		},

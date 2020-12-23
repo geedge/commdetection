@@ -37,7 +37,7 @@ type SComms []SComm
 // EvaluatePathRule defines a rule from json file to judge command score by
 // whether sensitive path appears in the Command
 func EvaluatePathRule(cs CommScore) CommScore {
-	fileName := yaml.GetYamlSetting("pathrules")
+	fileName := yaml.GetYamlPathsSetting("pathrules")
 	if fileName == "" {
 		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "pathrules.json")
 	}
@@ -51,7 +51,7 @@ func EvaluatePathRule(cs CommScore) CommScore {
 			if info == nil {
 				return err
 			}
-			for _, flag := range cs.Command.Flags {
+			for _, flag := range cs.Command.Args {
 				similar := 0
 				indexPath, indexFlag := len(path)-1, len(flag)-1
 				for indexPath >= 0 && indexFlag >= 0 {
@@ -80,7 +80,7 @@ func EvaluatePathRule(cs CommScore) CommScore {
 // EvaluateCommandRule defines a rule from json file to judge command score by
 // whether sensitive command appears in the Command
 func EvaluateCommandRule(cs CommScore) CommScore {
-	fileName := yaml.GetYamlSetting("commrules")
+	fileName := yaml.GetYamlPathsSetting("commrules")
 	if fileName == "" {
 		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "commrules.json")
 	}

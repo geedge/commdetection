@@ -20,7 +20,7 @@ func TestEvaluateCommandRule(t *testing.T) {
 		cs := CommScore{
 			Command: comm.Command{
 				CommName: "wget",
-				Flags:    []string{"https://127.0.0.1:8080"},
+				Args:     []string{"https://127.0.0.1:8080"},
 			},
 			Score: 100,
 		}
@@ -36,7 +36,7 @@ func TestEvaluatePathRule(t *testing.T) {
 		cs := CommScore{
 			Command: comm.Command{
 				CommName: "wget",
-				Flags:    []string{"/root/go/src/commdetection/rules/rulesjson/rules.json"},
+				Args:     []string{"/root/go/src/commdetection/rules/rulesjson/rules.json"},
 			},
 			Score: 100,
 		}
@@ -53,7 +53,7 @@ func BenchmarkEvaluateCommandRule(b *testing.B) {
 	cs := CommScore{
 		Command: comm.Command{
 			CommName: "wget",
-			Flags:    []string{"https://127.0.0.1:8080"},
+			Args:     []string{"https://127.0.0.1:8080"},
 		},
 		Score: 100,
 	}

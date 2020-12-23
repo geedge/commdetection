@@ -11,49 +11,49 @@ func TestFlushCommands(t *testing.T) {
 		commands := []Command{
 			{
 				CommName: "wget",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "apt",
-				Flags:    []string{"install", "wget"},
+				Args:     []string{"install", "wget"},
 			},
 			{
 				CommName: "./commDetection",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "vim",
-				Flags:    []string{"debug", "main.go"},
+				Args:     []string{"debug", "main.go"},
 			},
 			{
 				CommName: "source",
-				Flags:    []string{".profile"},
+				Args:     []string{".profile"},
 			},
 			{
 				CommName: "go",
-				Flags:    []string{"build", "main.go"},
+				Args:     []string{"build", "main.go"},
 			},
 			{
 				CommName: "aasdf",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 		}
 		predict := []Command{
 			{
 				CommName: "wget",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "apt",
-				Flags:    []string{"install", "wget"},
+				Args:     []string{"install", "wget"},
 			},
 			{
 				CommName: "vim",
-				Flags:    []string{"debug", "main.go"},
+				Args:     []string{"debug", "main.go"},
 			},
 			{
 				CommName: "go",
-				Flags:    []string{"build", "main.go"},
+				Args:     []string{"build", "main.go"},
 			},
 		}
 		commands = FlushCommands(commands, []Filter{SimpleCommandFilter})
@@ -67,41 +67,41 @@ func TestFlushCommands(t *testing.T) {
 		commands := []Command{
 			{
 				CommName: "wget",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "apt",
-				Flags:    []string{"install", "wget"},
+				Args:     []string{"install", "wget"},
 			},
 			{
 				CommName: "dlv",
-				Flags:    []string{"debug", "main.go"},
+				Args:     []string{"debug", "main.go"},
 			},
 			{
 				CommName: "source",
-				Flags:    []string{".profile"},
+				Args:     []string{".profile"},
 			},
 			{
 				CommName: "go",
-				Flags:    []string{"build", "main.go"},
+				Args:     []string{"build", "main.go"},
 			},
 			{
 				CommName: "aasdf",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 		}
 		predict := []Command{
 			{
 				CommName: "wget",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "apt",
-				Flags:    []string{"install", "wget"},
+				Args:     []string{"install", "wget"},
 			},
 			{
 				CommName: "go",
-				Flags:    []string{"build", "main.go"},
+				Args:     []string{"build", "main.go"},
 			},
 		}
 		commands = FlushCommands(commands, []Filter{HelpCommandFilter})
@@ -115,45 +115,45 @@ func TestFlushCommands(t *testing.T) {
 		commands := []Command{
 			{
 				CommName: "wget",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "apt",
-				Flags:    []string{"install", "wget"},
+				Args:     []string{"install", "wget"},
 			},
 			{
 				CommName: "vim",
-				Flags:    []string{"debug", "main.go"},
+				Args:     []string{"debug", "main.go"},
 			},
 			{
 				CommName: "./commDetection",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "source",
-				Flags:    []string{".profile"},
+				Args:     []string{".profile"},
 			},
 			{
 				CommName: "go",
-				Flags:    []string{"build", "main.go"},
+				Args:     []string{"build", "main.go"},
 			},
 			{
 				CommName: "aasdf",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 		}
 		predict := []Command{
 			{
 				CommName: "wget",
-				Flags:    []string{},
+				Args:     []string{},
 			},
 			{
 				CommName: "apt",
-				Flags:    []string{"install", "wget"},
+				Args:     []string{"install", "wget"},
 			},
 			{
 				CommName: "vim",
-				Flags:    []string{"debug", "main.go"},
+				Args:     []string{"debug", "main.go"},
 			},
 		}
 		commands = FlushCommands(commands, []Filter{ManCommandFilter})

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-09 16:44:44
- * @LastEditTime: 2020-12-22 13:45:23
+ * @LastEditTime: 2020-12-23 12:24:29
  * @LastEditors: Please set LastEditors
  * @Description: Init settings from yaml file
  * @FilePath: /commdetection/init/init.go
@@ -11,6 +11,7 @@ package yaml
 
 import (
 	"commdetection/logger"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -25,6 +26,7 @@ type Conf struct {
 		CommRulePath   string `yaml:"commrulepath"`
 		PathRulePath   string `yaml:"pathrulepath"`
 	}
+	GinMode string `yamle:"ginmode"`
 }
 
 var conf *Conf
@@ -41,8 +43,16 @@ func init() {
 	}
 }
 
-// GetYamlSetting gets the yaml settings from conf.yaml
-func GetYamlSetting(settingName string) (c string) {
+// GetGinMode returns ginmode(release, debug, test)
+func GetGinMode() (string, error) {
+	if conf.GinMode == "debug" || conf.GinMode == "release" || conf.GinMode == "test" {
+		return conf.GinMode, nil
+	}
+	return "release", fmt.Errorf("GinMode reads failed. Cannot find %s in any of gin modes", conf.GinMode)
+}
+
+// GetYamlPathsSetting gets the paths: settings from conf.yaml
+func GetYamlPathsSetting(settingName string) (c string) {
 	switch settingName {
 	case "commrules":
 		c = filepath.Join(os.Getenv("COMMDEPATH"), conf.Paths.CommRulePath)

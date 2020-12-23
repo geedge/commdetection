@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2020-12-19 10:47:41
+ * @LastEditTime: 2020-12-23 11:58:08
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -19,7 +19,7 @@ import (
 // Command contains command and its flags or symbols
 type Command struct {
 	CommName string   `json:"commName"`
-	Flags    []string `json:"flags"`
+	Args     []string `json:"flags"`
 }
 
 // GetCommands returns a list of commands preprocessed which first get commands from file then net
@@ -50,20 +50,31 @@ func getCommandsFromFile(f string) ([]Command, error) {
 	}
 	lines := strings.Split(string(buf), "\n")
 	for _, line := range lines {
-		tComm := strings.Fields(line)
-		newComm := Command{}
-		for commNum, comm := range tComm {
-			if commNum == 0 {
-				newComm.CommName = comm
-			} else if comm != "" {
-				newComm.Flags = append(newComm.Flags, comm)
-			}
-		}
-		if !reflect.DeepEqual(newComm, Command{}) {
-			commands = append(commands, newComm)
-		}
+		commands = append(commands, splitCommandsInLine(strings.Fields(line))...)
 	}
 	return commands, nil
+}
+
+func splitCommandsInLine(tComm []string) []Command {
+	commands := []Command{}
+	newComm := Command{
+		CommName: "",
+		Args:     []string{},
+	}
+	for commNum, comm := range tComm {
+		if commNum == 0 {
+			newComm.CommName = comm
+		} else if comm != "&&" {
+			newComm.Args = append(newComm.Args, comm)
+		} else {
+			commands = append(commands, splitCommandsInLine(tComm[commNum+1:])...)
+			break
+		}
+	}
+	if !reflect.DeepEqual(newComm, Command{}) {
+		commands = append([]Command{newComm}, commands...)
+	}
+	return commands
 }
 
 // TODO: ready to develop until API is given

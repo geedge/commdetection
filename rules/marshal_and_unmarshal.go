@@ -48,7 +48,7 @@ func GetFuncName(i interface{}, seps ...rune) string {
 }
 
 func marshalRules(rs Rules) (err error) {
-	fileName := yaml.GetYamlSetting("multirules")
+	fileName := yaml.GetYamlPathsSetting("multirules")
 	if fileName == "" {
 		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "rules.json")
 	}
@@ -58,7 +58,7 @@ func marshalRules(rs Rules) (err error) {
 
 // unmarshalRules unmarshal rules from a json file
 func unmarshalRules() (r Rules, err error) {
-	fileName := yaml.GetYamlSetting("rules")
+	fileName := yaml.GetYamlPathsSetting("rules")
 	if fileName == "" {
 		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "rules.json")
 	}

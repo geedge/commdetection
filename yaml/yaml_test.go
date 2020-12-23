@@ -15,17 +15,17 @@ import (
 )
 
 func TestGetYamlSetting(t *testing.T) {
-	setting := GetYamlSetting("commrules")
+	setting := GetYamlPathsSetting("commrules")
 	if setting != "/root/go/src/commdetection/rules/rulesjson/commrules.json" {
 		fmt.Println(setting)
 		t.Errorf("get yaml setting failed")
 	}
-	setting = GetYamlSetting("pathrules")
+	setting = GetYamlPathsSetting("pathrules")
 	if setting != "/root/go/src/commdetection/rules/rulesjson/pathrules.json" {
 		fmt.Println(setting)
 		t.Errorf("get yaml setting failed")
 	}
-	setting = GetYamlSetting("rules")
+	setting = GetYamlPathsSetting("rules")
 	if setting != "/root/go/src/commdetection/rules/rulesjson/rules.json" {
 		fmt.Println(setting)
 		t.Errorf("get yaml setting failed")
@@ -33,7 +33,7 @@ func TestGetYamlSetting(t *testing.T) {
 }
 
 func BenchmarkGetYamlSetting(b *testing.B) {
-	GetYamlSetting("commrules")
-	GetYamlSetting("pathrules")
-	GetYamlSetting("rules")
+	GetYamlPathsSetting("commrules")
+	GetYamlPathsSetting("pathrules")
+	GetYamlPathsSetting("rules")
 }
