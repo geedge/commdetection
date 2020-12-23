@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 13:57:06
- * @LastEditTime: 2020-12-19 10:48:00
+ * @LastEditTime: 2020-12-22 16:27:08
  * @LastEditors: Please set LastEditors
  * @Description: Includes various marshalling ways
  * @FilePath: /commdetection/rules/marshalling.go
@@ -52,7 +52,7 @@ func marshalRules(rs Rules) (err error) {
 	if fileName == "" {
 		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "rules.json")
 	}
-	err = marshalSetting(rs, fileName)
+	err = marshalSetting(fileName, rs)
 	return
 }
 
@@ -70,7 +70,7 @@ func unmarshalRules() (r Rules, err error) {
 }
 
 func marshalSensitivePathSetting(spaths SPaths, fileName string) error {
-	return marshalSetting(spaths, fileName)
+	return marshalSetting(fileName, spaths)
 }
 
 func unmarshalSensitivePathSetting(fileName string) (spaths SPaths, err error) {
@@ -82,7 +82,7 @@ func unmarshalSensitivePathSetting(fileName string) (spaths SPaths, err error) {
 }
 
 func marshalSensitiveCommSetting(scomms []SComm, fileName string) error {
-	return marshalSetting(scomms, fileName)
+	return marshalSetting(fileName, scomms)
 }
 
 func unmarshalSensitiveCommSetting(fileName string) (scomms SComms, err error) {
@@ -93,7 +93,7 @@ func unmarshalSensitiveCommSetting(fileName string) (scomms SComms, err error) {
 	return
 }
 
-func marshalSetting(settings interface{}, fileName string) error {
+func marshalSetting(fileName string, settings interface{}) error {
 	buf, err := json.Marshal(settings)
 	if err != nil {
 		return err

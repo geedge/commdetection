@@ -1,3 +1,4 @@
+# The base path is the project's path or env variable COMMDEPATH
 paths:
   multirulespath: rules/rulesjson/rules.json
   commrulepath: rules/rulesjson/commrules.json

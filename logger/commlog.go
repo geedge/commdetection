@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-18 16:16:09
- * @LastEditTime: 2020-12-19 10:47:01
+ * @LastEditTime: 2020-12-22 16:23:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/commlog/commlog.go
@@ -15,31 +15,43 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var logger = logrus.New()
+// logger is the logrus's logger engine
+var (
+	logger   = logrus.New()
+	LogLevel = logrus.DebugLevel
+)
 
-// Init initializes
-func Init(logLevel logrus.Level, formatter logrus.Formatter) {
+func init() {
+	formatter := &logrus.TextFormatter{
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:03:04",
+	}
 	logger.SetFormatter(formatter)
-	logger.SetLevel(logLevel)
+	logger.SetLevel(LogLevel)
 	logger.SetOutput(os.Stdout)
-}
-
-// Warnln uses logrus.Warnln to set warn info
-func Warnln(args ...interface{}) {
-	logger.Warnln(args)
 }
 
 // Debugln uses logrus.Debugln to set debug info
 func Debugln(args ...interface{}) {
-	logger.Debugln(args)
+	logger.Debugln(args...)
+}
+
+// Warnln uses logrus.Warnln to set warn info
+func Warnln(args ...interface{}) {
+	logger.Warnln(args...)
 }
 
 // Fatalln uses logrus.Fatalln to set fatal info
 func Fatalln(args ...interface{}) {
-	logger.Fatalln(args)
+	logger.Fatalln(args...)
+}
+
+// Debugf uses logrus.Debugf to set debug formatted info
+func Debugf(format string, args ...interface{}) {
+	logger.Debugf(format, args...)
 }
 
 // Warnf uses logrus.Warnf to set warning formatted info
 func Warnf(format string, args ...interface{}) {
-	logger.Warnf(format, args)
+	logger.Warnf(format, args...)
 }
