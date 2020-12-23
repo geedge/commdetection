@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-22 14:13:40
- * @LastEditTime: 2020-12-22 16:33:42
+ * @LastEditTime: 2020-12-23 14:50:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/cmd/root_test.go
@@ -19,7 +19,6 @@ import (
 )
 
 func init() {
-	output = "json"
 	go root()
 	time.Sleep(2 * time.Second)
 }

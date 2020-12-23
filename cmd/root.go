@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-19 11:59:02
- * @LastEditTime: 2020-12-23 14:00:47
+ * @LastEditTime: 2020-12-23 14:49:55
  * @LastEditors: Please set LastEditors
  * @Description: root of the commdetection cmd
  * @FilePath: /commdetection/cmd/root.go
@@ -37,7 +37,6 @@ var (
 	evaluations []string
 	file        string
 	logLevel    uint32
-	output      string
 
 	filters = []comm.Filter{}
 	rs      = rules.Rules{}
@@ -56,7 +55,6 @@ func init() {
 	rootCmd.PersistentFlags().StringSliceVarP(&evaluations, "evaluations", "e", []string{"command"}, "choose one or more evaluations to evaluate commands")
 	rootCmd.PersistentFlags().StringVar(&file, "file", "/root/.bash_history", "choose one file storing data of the commands")
 	rootCmd.PersistentFlags().Uint32Var(&logLevel, "loglevel", uint32(logrus.DebugLevel), "choose log level")
-	rootCmd.PersistentFlags().StringVarP(&output, "output", "o", "file", "choose the output method: json(json) or file.json(file), choose json will open a server to provide json output on the net")
 	rootCmd.AddCommand(verCmd) // add version as a subcommand
 }
 
