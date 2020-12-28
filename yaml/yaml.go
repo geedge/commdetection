@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-09 16:44:44
- * @LastEditTime: 2020-12-23 12:24:29
+ * @LastEditTime: 2020-12-28 17:16:23
  * @LastEditors: Please set LastEditors
  * @Description: Init settings from yaml file
  * @FilePath: /commdetection/init/init.go
@@ -26,7 +26,7 @@ type Conf struct {
 		CommRulePath   string `yaml:"commrulepath"`
 		PathRulePath   string `yaml:"pathrulepath"`
 	}
-	GinMode string `yamle:"ginmode"`
+	GinMode string `yaml:"ginmode"`
 }
 
 var conf *Conf

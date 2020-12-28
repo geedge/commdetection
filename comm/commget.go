@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2020-12-23 11:58:08
+ * @LastEditTime: 2020-12-28 17:29:05
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -71,7 +71,10 @@ func splitCommandsInLine(tComm []string) []Command {
 			break
 		}
 	}
-	if !reflect.DeepEqual(newComm, Command{}) {
+	if !reflect.DeepEqual(newComm, Command{
+		CommName: "",
+		Args:     []string{},
+	}) {
 		commands = append([]Command{newComm}, commands...)
 	}
 	return commands

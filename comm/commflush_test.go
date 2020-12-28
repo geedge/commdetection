@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-12-03 12:51:28
+ * @LastEditTime: 2020-12-28 17:30:46
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /commdetection/comm/commflush_test.go
+ */
 package comm
 
 import (
@@ -7,7 +15,7 @@ import (
 )
 
 func TestFlushCommands(t *testing.T) {
-	t.Run("FlushCommands Test Using SimpleCommandFilter", func(t *testing.T) {
+	t.Run("FlushCommands Test Using WhichCommandFilter", func(t *testing.T) {
 		commands := []Command{
 			{
 				CommName: "wget",
@@ -56,107 +64,7 @@ func TestFlushCommands(t *testing.T) {
 				Args:     []string{"build", "main.go"},
 			},
 		}
-		commands = FlushCommands(commands, []Filter{SimpleCommandFilter})
-		if !reflect.DeepEqual(commands, predict) {
-			fmt.Println(commands)
-			t.Errorf("results are not as predicted")
-		}
-	})
-
-	t.Run("FlushCommands Test Using HelpCommandFilter", func(t *testing.T) {
-		commands := []Command{
-			{
-				CommName: "wget",
-				Args:     []string{},
-			},
-			{
-				CommName: "apt",
-				Args:     []string{"install", "wget"},
-			},
-			{
-				CommName: "dlv",
-				Args:     []string{"debug", "main.go"},
-			},
-			{
-				CommName: "source",
-				Args:     []string{".profile"},
-			},
-			{
-				CommName: "go",
-				Args:     []string{"build", "main.go"},
-			},
-			{
-				CommName: "aasdf",
-				Args:     []string{},
-			},
-		}
-		predict := []Command{
-			{
-				CommName: "wget",
-				Args:     []string{},
-			},
-			{
-				CommName: "apt",
-				Args:     []string{"install", "wget"},
-			},
-			{
-				CommName: "go",
-				Args:     []string{"build", "main.go"},
-			},
-		}
-		commands = FlushCommands(commands, []Filter{HelpCommandFilter})
-		if !reflect.DeepEqual(commands, predict) {
-			fmt.Println(commands)
-			t.Errorf("results are not as predicted")
-		}
-	})
-
-	t.Run("FlushCommands Test Using ManCommandFilter", func(t *testing.T) {
-		commands := []Command{
-			{
-				CommName: "wget",
-				Args:     []string{},
-			},
-			{
-				CommName: "apt",
-				Args:     []string{"install", "wget"},
-			},
-			{
-				CommName: "vim",
-				Args:     []string{"debug", "main.go"},
-			},
-			{
-				CommName: "./commDetection",
-				Args:     []string{},
-			},
-			{
-				CommName: "source",
-				Args:     []string{".profile"},
-			},
-			{
-				CommName: "go",
-				Args:     []string{"build", "main.go"},
-			},
-			{
-				CommName: "aasdf",
-				Args:     []string{},
-			},
-		}
-		predict := []Command{
-			{
-				CommName: "wget",
-				Args:     []string{},
-			},
-			{
-				CommName: "apt",
-				Args:     []string{"install", "wget"},
-			},
-			{
-				CommName: "vim",
-				Args:     []string{"debug", "main.go"},
-			},
-		}
-		commands = FlushCommands(commands, []Filter{ManCommandFilter})
+		commands = FlushCommands(commands, []Filter{WhichCommandFilter})
 		if !reflect.DeepEqual(commands, predict) {
 			fmt.Println(commands)
 			t.Errorf("results are not as predicted")

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 10:59:19
- * @LastEditTime: 2020-12-19 10:48:21
+ * @LastEditTime: 2020-12-28 17:22:27
  * @LastEditors: Please set LastEditors
  * @Description: Unmarshal and marshal various types of settings and rules
  * @FilePath: /commdetection/rules/ruletypes.go
@@ -11,7 +11,6 @@ package rules
 
 import (
 	"commdetection/logger"
-	"commdetection/yaml"
 	"os"
 	"path/filepath"
 )
@@ -31,19 +30,15 @@ type SComm struct {
 	Coefficient float64 `json:"coefficient"`
 }
 
-// SComms is the SComm's multile types
+// SComms is the SComm's multiple types
 type SComms []SComm
 
 // EvaluatePathRule defines a rule from json file to judge command score by
 // whether sensitive path appears in the Command
 func EvaluatePathRule(cs CommScore) CommScore {
-	fileName := yaml.GetYamlPathsSetting("pathrules")
-	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "pathrules.json")
-	}
-	spaths, err := unmarshalSensitivePathSetting(fileName)
+	spaths, err := UnmarshalSensitivePathSetting()
 	if err != nil {
-		logger.Warnf("cannot get sensitive paths from file %s, please check the file path", fileName)
+		logger.Warnf("cannot get sensitive paths from file, please check the file path")
 		return cs
 	}
 	for _, spath := range spaths {
@@ -80,13 +75,9 @@ func EvaluatePathRule(cs CommScore) CommScore {
 // EvaluateCommandRule defines a rule from json file to judge command score by
 // whether sensitive command appears in the Command
 func EvaluateCommandRule(cs CommScore) CommScore {
-	fileName := yaml.GetYamlPathsSetting("commrules")
-	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "rules", "rulesjson", "commrules.json")
-	}
-	scomms, err := unmarshalSensitiveCommSetting(fileName)
+	scomms, err := UnmarshalSensitiveCommSetting()
 	if err != nil {
-		logger.Warnf("cannot get sensitive paths from file %s, please check the file path", fileName)
+		logger.Warnln("cannot get sensitive paths from file, please check the file path")
 		return cs
 	}
 	for _, scomm := range scomms {

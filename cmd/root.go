@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-19 11:59:02
- * @LastEditTime: 2020-12-23 14:49:55
+ * @LastEditTime: 2020-12-28 16:42:48
  * @LastEditors: Please set LastEditors
  * @Description: root of the commdetection cmd
  * @FilePath: /commdetection/cmd/root.go
@@ -12,12 +12,7 @@ package cmd
 import (
 	"commdetection/comm"
 	"commdetection/logger"
-	"commdetection/router"
 	"commdetection/rules"
-	"encoding/json"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -40,8 +35,6 @@ var (
 
 	filters = []comm.Filter{}
 	rs      = rules.Rules{}
-	buf     []byte
-	jsonBuf []byte
 )
 
 // Execute executes the command
@@ -50,7 +43,6 @@ func Execute() error {
 }
 
 func init() {
-
 	rootCmd.PersistentFlags().StringVar(&filterStr, "filter", "which", "choose one filter to filt the data from the file")
 	rootCmd.PersistentFlags().StringSliceVarP(&evaluations, "evaluations", "e", []string{"command"}, "choose one or more evaluations to evaluate commands")
 	rootCmd.PersistentFlags().StringVar(&file, "file", "/root/.bash_history", "choose one file storing data of the commands")
@@ -61,6 +53,11 @@ func init() {
 // GetLogLevel returns loglevel sent by rootCmd
 func GetLogLevel() uint32 {
 	return logLevel
+}
+
+// GetFileName returns filename passed by the command line value
+func GetFileName() string {
+	return file
 }
 
 func root() {
@@ -91,10 +88,13 @@ func root() {
 	case "man":
 		filters = append(filters, comm.ManCommandFilter)
 	}
+}
 
+// StartEvaluateCommands starts evaluating commands using variables rootCmd provided
+func StartEvaluateCommands(filename string) []rules.CommScore {
 	// 从文件中获取路径，默认获取路径为/root/.bash_history
-	logger.Debugf("Start getting commmands from \"%s\"", file)
-	commands := comm.GetCommands(file, "")
+	logger.Debugf("Start getting commmands from \"%s\"", filename)
+	commands := comm.GetCommands(filename, "")
 	// 清理无效命令，利用filter函数保留有效命令以便提供分析
 	logger.Debugf("Start flushing commands using \"%s\" filter", filterStr)
 	commands = comm.FlushCommands(commands, filters)
@@ -104,10 +104,5 @@ func root() {
 	// 评估命令，利用rs中保留的规则进行评估
 	logger.Debugf("Evaluating commands' scores using %s evaluations", evaluations)
 	css = rules.EvaluateCommScore(css, rs)
-	// 将命令得分保存到json文件中
-	jsonBuf, _ = json.Marshal(css)
-	logger.Debugln("Storing result to \"static/output.json\" file")
-	ioutil.WriteFile(filepath.Join(os.Getenv("COMMDEPATH"), "static", "output.json"), jsonBuf, os.ModeAppend)
-	// Start backend engine
-	router.Start()
+	return css
 }

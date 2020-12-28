@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:09
- * @LastEditTime: 2020-12-19 10:44:44
+ * @LastEditTime: 2020-12-28 17:21:59
  * @LastEditors: Please set LastEditors
  * @Description: Test commrules.go
  * @FilePath: /commdetection/rules/commrules_test.go
@@ -111,14 +111,14 @@ func TestRule(t *testing.T) {
 		}
 	})
 
-	t.Run("Test MarshallRules", func(t *testing.T) {
+	t.Run("Test MarshallEvaluationRules", func(t *testing.T) {
 		rs := Rules{
 			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
 			},
 		}
-		err := marshalRules(rs)
+		err := MarshalEvaluationRules(rs)
 		if err != nil {
 			t.Error(err)
 		}

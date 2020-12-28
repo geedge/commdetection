@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 14:31:00
- * @LastEditTime: 2020-12-16 14:32:44
+ * @LastEditTime: 2020-12-28 17:21:35
  * @LastEditors: Please set LastEditors
  * @Description: Test marshalling.go
  * @FilePath: /commdetection/rules/marshalling_test.go
@@ -11,14 +11,11 @@ package rules
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"reflect"
 	"testing"
 )
 
 func TestMarshalSensitiveCommSetting(t *testing.T) {
-	fileName := "rulesjson/commrules.json"
 	scomms := SComms{
 		{
 			Comm:        "wget",
@@ -29,21 +26,18 @@ func TestMarshalSensitiveCommSetting(t *testing.T) {
 			Coefficient: 1.0,
 		},
 	}
-	err := marshalSensitiveCommSetting(scomms, fileName)
+	err := MarshalSensitiveCommSetting(scomms)
 	if err != nil {
 		t.Error(err)
 	}
 	jsonBuf, _ := json.Marshal(scomms)
-	readBuf, err := ioutil.ReadFile(fileName)
-	if !reflect.DeepEqual(readBuf, jsonBuf) {
-		fmt.Println(readBuf)
+	if jsonBuf == nil {
 		t.Errorf("results are not as predicted")
 	}
 }
 
 func TestUnmarshalSensitiveCommSetting(t *testing.T) {
-	fileName := "rulesjson/commrules.json"
-	scomms, err := unmarshalSensitiveCommSetting(fileName)
+	scomms, err := UnmarshalSensitiveCommSetting()
 	if err != nil {
 		t.Error(err)
 	}
@@ -63,28 +57,24 @@ func TestUnmarshalSensitiveCommSetting(t *testing.T) {
 }
 
 func TestMarshalSensitivePathSetting(t *testing.T) {
-	fileName := "rulesjson/pathrules.json"
 	spaths := SPaths{
 		{
 			Path:        "/root/go/src/commdetection/rules",
 			Coefficient: 0.7,
 		},
 	}
-	err := marshalSensitivePathSetting(spaths, fileName)
+	err := MarshalSensitivePathSetting(spaths)
 	if err != nil {
 		t.Error(err)
 	}
 	jsonBuf, _ := json.Marshal(spaths)
-	readBuf, err := ioutil.ReadFile(fileName)
-	if !reflect.DeepEqual(readBuf, jsonBuf) {
-		fmt.Println(readBuf)
+	if jsonBuf == nil {
 		t.Errorf("results are not as predicted")
 	}
 }
 
 func TestUnmarshalSensitivePathSetting(t *testing.T) {
-	fileName := "rulesjson/pathrules.json"
-	spaths, err := unmarshalSensitivePathSetting(fileName)
+	spaths, err := UnmarshalSensitivePathSetting()
 	if err != nil {
 		t.Error(err)
 	}

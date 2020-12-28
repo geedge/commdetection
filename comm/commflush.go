@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-07 09:22:53
- * @LastEditTime: 2020-12-19 10:42:51
+ * @LastEditTime: 2020-12-28 16:25:51
  * @LastEditors: Please set LastEditors
  * @Description: this file flushes invalid commands using various types of filters
  * @FilePath: /commdetection/commflush.go
@@ -65,16 +65,18 @@ func removeCommands(commands []Command, n IntSlice) []Command {
 }
 
 // SimpleCommandFilter tries to run command without any flag to see whether this command can be run properly
+// Deprecated: use WhichCommandFilter instead
 func SimpleCommandFilter(commands []Command) []Command {
-	return cmdFilter(commands, func(command string) error {
-		return commandChecker(command, "", NOTFOUNDREG)
+	return cmdsFilter(commands, func(command string) error {
+		return checkOneCmd(command, "", NOTFOUNDREG)
 	})
 }
 
 // HelpCommandFilter tries to use "`Command` --help", "`Command` -h" and "`Command` help" to judge `Command` is valid or not
+// Deprecated: use WhichCommandFilter instead
 func HelpCommandFilter(commands []Command) []Command {
-	return cmdFilter(commands, func(command string) error {
-		if commandChecker(command, "--help", NOTFOUNDREG) != nil {
+	return cmdsFilter(commands, func(command string) error {
+		if checkOneCmd(command, "--help", NOTFOUNDREG) != nil {
 			return errors.New("command not found or not in $PATH or directory")
 		}
 		return nil
@@ -82,26 +84,27 @@ func HelpCommandFilter(commands []Command) []Command {
 }
 
 // ManCommandFilter tries to use "man `Command`" cmd to judge `Command` is valid or not
+// Deprecated: use WhichCommandFilter instead
 func ManCommandFilter(commands []Command) []Command {
-	return cmdFilter(commands, func(command string) error {
-		return commandChecker("man", command, MANENTRYREG)
+	return cmdsFilter(commands, func(command string) error {
+		return checkOneCmd("man", command, MANENTRYREG)
 	})
 }
 
 // WhichCommandFilter tries to use "which `Command`" cmd to judge `Command` is valid or not
 func WhichCommandFilter(commands []Command) []Command {
-	return cmdFilter(commands, func(command string) error {
-		return commandChecker("which", command, "")
+	return cmdsFilter(commands, func(command string) error {
+		return checkOneCmd("which", command, "")
 	})
 }
 
-func commandChecker(command, flag, reg string) error {
+func checkOneCmd(command, arg, reg string) error {
 	compile, _ := regexp.Compile(reg)
 	var (
 		stderr bytes.Buffer
 		stdout bytes.Buffer
 	)
-	cmd := exec.Command(command, flag)
+	cmd := exec.Command(command, arg)
 	cmd.Stderr = &stderr
 	cmd.Stdout = &stdout
 	if err := cmd.Start(); err != nil {
@@ -127,12 +130,12 @@ func commandChecker(command, flag, reg string) error {
 	return nil
 }
 
-func cmdFilter(commands []Command, cmd func(string) error) []Command {
+func cmdsFilter(commands []Command, execute func(string) error) []Command {
 	var invalidNum []int
 	ec := make(chan errorNum, 1)
 	for commNum, command := range commands {
 		go func(command string, commNum int) {
-			ec <- errorNum{cmd(command), commNum}
+			ec <- errorNum{execute(command), commNum}
 		}(command.CommName, commNum)
 	}
 	for range commands {

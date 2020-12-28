@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-23 13:17:08
- * @LastEditTime: 2020-12-23 13:43:48
+ * @LastEditTime: 2020-12-28 16:10:14
  * @LastEditors: Please set LastEditors
  * @Description: router.go defines gin.Engine and its router
  * @FilePath: /commdetection/route/router.go
@@ -18,8 +18,13 @@ import (
 	"os/signal"
 	"path/filepath"
 	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	addr = ":8080"
 )
 
 var (
@@ -43,14 +48,14 @@ func init() {
 	router.Use(logger.Middleware())
 
 	srv = &http.Server{
-		Addr:    ":8080",
+		Addr:    addr,
 		Handler: router,
 	}
 
 	manageRouter()
 }
 
-// Start starts gin engine
+// Start starts and sets ending method for gin engine
 func Start() {
 	go func() {
 		// engine start on http://127.0.0.1:8000
@@ -64,14 +69,28 @@ func Start() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	logger.Debugln("Server shutting down...")
+	logger.Debugln("Server starts shutting down...")
 
-	if err := srv.Shutdown(context.Background()); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+	if err := srv.Shutdown(ctx); err != nil {
 		logger.Fatalln("Server Shutdown with err: ", err)
 	}
 	logger.Debugln("Server shutted down")
+	cancel()
 }
 
 func manageRouter() {
+	// `/static` stores all the static file of the system
 	router.Static("/static", staticRoute)
+	router.GET("/version", verEndpoint)
+	eva := router.Group("/eva")
+	{
+		eva.POST("/upload", uploadCommEndpoint)
+		eva.GET("/start", startEvaluateEndpoint)
+	}
+	comm := router.Group("/comm")
+	{
+		comm.POST("/rules", setCommrulesEndpoint)
+	}
 }
