@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-28 15:53:37
- * @LastEditTime: 2020-12-28 17:31:34
+ * @LastEditTime: 2020-12-29 16:36:13
  * @LastEditors: Please set LastEditors
  * @Description: endpoint.go contains all the endpoints
  * @FilePath: /commdetection/router/endpoint.go
@@ -36,7 +36,7 @@ func uploadCommEndpoint(c *gin.Context) {
 		return
 	}
 
-	filename := filepath.Base(commfile.Filename)
+	filename := filepath.Join(StaticRoute, filepath.Base(commfile.Filename))
 	if err := c.SaveUploadedFile(commfile, filename); err != nil {
 		handleErr(c, err)
 		return
@@ -51,7 +51,7 @@ func startEvaluateEndpoint(c *gin.Context) {
 	css := cmd.StartEvaluateCommands(cmd.GetFileName())
 	jsonBuf, _ := json.Marshal(css)
 	logger.Debugln("Storing result to \"static/output.json\" file")
-	if err := ioutil.WriteFile(filepath.Join(os.Getenv("COMMDEPATH"), "static", "output.json"), jsonBuf, os.ModeAppend); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(StaticRoute, "output.json"), jsonBuf, os.ModeAppend); err != nil {
 		handleErr(c, err)
 		return
 	}
@@ -155,6 +155,17 @@ func getEvaluationRulesEndpoint(c *gin.Context) {
 	})
 }
 
+// setPathrulesEndpoint get the paths rule setting in the post form and marshal it to the json file
+// Post form should be like:
+//
+// {
+//     "rules": [
+//	      {
+//            "name": "rule name",
+//            "rulefunc": "func name",
+//        }, ...
+//     ]
+// }
 func setEvaluationRulesEndpoint(c *gin.Context) {
 	rs := rules.Rules{}
 	if err := c.ShouldBind(&rs); err != nil {

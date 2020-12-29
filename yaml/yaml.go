@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-09 16:44:44
- * @LastEditTime: 2020-12-28 17:16:23
+ * @LastEditTime: 2020-12-29 16:11:40
  * @LastEditors: Please set LastEditors
  * @Description: Init settings from yaml file
  * @FilePath: /commdetection/init/init.go
@@ -15,6 +15,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"gopkg.in/yaml.v2"
 )
@@ -27,6 +28,7 @@ type Conf struct {
 		PathRulePath   string `yaml:"pathrulepath"`
 	}
 	GinMode string `yaml:"ginmode"`
+	Port    uint16 `yaml:"port"`
 }
 
 var conf *Conf
@@ -43,12 +45,21 @@ func init() {
 	}
 }
 
+// GetPort returns port of the server, if port is undefined, then return :8080
+func GetPort() string {
+	if conf.Port != 0 {
+		return ":" + strconv.Itoa(int(conf.Port))
+	}
+	return ":8080"
+
+}
+
 // GetGinMode returns ginmode(release, debug, test)
 func GetGinMode() (string, error) {
 	if conf.GinMode == "debug" || conf.GinMode == "release" || conf.GinMode == "test" {
 		return conf.GinMode, nil
 	}
-	return "release", fmt.Errorf("GinMode reads failed. Cannot find %s in any of gin modes", conf.GinMode)
+	return "debug", fmt.Errorf("GinMode reads failed. Cannot find %s in any of gin modes", conf.GinMode)
 }
 
 // GetYamlPathsSetting gets the paths: settings from conf.yaml

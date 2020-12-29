@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 10:59:19
- * @LastEditTime: 2020-12-28 17:22:27
+ * @LastEditTime: 2020-12-29 15:07:38
  * @LastEditors: Please set LastEditors
  * @Description: Unmarshal and marshal various types of settings and rules
  * @FilePath: /commdetection/rules/ruletypes.go

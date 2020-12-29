@@ -25,5 +25,5 @@ func main() {
 	if err := cmd.Execute(); err != nil {
 		logger.Fatalln(err)
 	}
-	router.Start()
+	router.StartRouter()
 }

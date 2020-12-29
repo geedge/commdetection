@@ -3,4 +3,5 @@ paths:
   multirulespath: static/rules/rules.json
   commrulepath: static/rules/commrules.json
   pathrulepath: static/rules/pathrules.json
-ginmode: debug
+ginmode: release
+port: 8080

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-19 11:49:14
- * @LastEditTime: 2020-12-28 16:08:39
+ * @LastEditTime: 2020-12-29 15:48:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/cmd/version.go
@@ -16,7 +16,7 @@ import (
 )
 
 // Ver means version of the system
-const Ver = "command detection ver 0.0.1"
+const Ver = "command detection ver 0.0.2"
 
 var verCmd = &cobra.Command{
 	Use:   "version",

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-23 13:17:08
- * @LastEditTime: 2020-12-28 16:10:14
+ * @LastEditTime: 2020-12-29 16:33:47
  * @LastEditors: Please set LastEditors
  * @Description: router.go defines gin.Engine and its router
  * @FilePath: /commdetection/route/router.go
@@ -23,12 +23,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	addr = ":8080"
-)
-
 var (
-	staticRoute = filepath.Join(os.Getenv("COMMDEPATH"), "static")
+	addr = yaml.GetPort()
+	// StaticRoute sets the base route of the gin static filesystem
+	StaticRoute = filepath.Join(os.Getenv("COMMDEPATH"), "static", "base")
 
 	router *gin.Engine
 	srv    *http.Server
@@ -55,8 +53,8 @@ func init() {
 	manageRouter()
 }
 
-// Start starts and sets ending method for gin engine
-func Start() {
+// StartRouter starts and sets ending method for gin engine
+func StartRouter() {
 	go func() {
 		// engine start on http://127.0.0.1:8000
 		logger.Debugln("Server started at", srv.Addr)
@@ -81,16 +79,27 @@ func Start() {
 }
 
 func manageRouter() {
-	// `/static` stores all the static file of the system
-	router.Static("/static", staticRoute)
+	// "/static" stores all the static file of the system
+	router.Static("/static", StaticRoute)
 	router.GET("/version", verEndpoint)
-	eva := router.Group("/eva")
+	evar := router.Group("/evaluation")
 	{
-		eva.POST("/upload", uploadCommEndpoint)
-		eva.GET("/start", startEvaluateEndpoint)
+		evar.POST("/upload", uploadCommEndpoint)
+		evar.GET("/start", startEvaluateEndpoint)
 	}
-	comm := router.Group("/comm")
+	commr := router.Group("/commrules")
 	{
-		comm.POST("/rules", setCommrulesEndpoint)
+		commr.POST("/setrules", setCommrulesEndpoint)
+		commr.GET("/getrules", getCommrulesEndpoint)
+	}
+	pathr := router.Group("/pathrules")
+	{
+		pathr.POST("/setrules", setPathrulesEndpoint)
+		pathr.GET("/getrules", getPathrulesEndpoint)
+	}
+	rsr := router.Group("/rules")
+	{
+		rsr.POST("/setrules", setEvaluationRulesEndpoint)
+		rsr.GET("/getrules", getEvaluationRulesEndpoint)
 	}
 }
