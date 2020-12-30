@@ -7,20 +7,21 @@ triggers:
 commitMessage: ''
 stages:
   - stage:
-      name: commdetection-stage
-      displayName: 'commdetection Build stage'
-      failFast: false
+      name: commdetection-test-stage
+      displayName: 'commdetection test stage'
+      failFast: true
       steps:
         - step: golangbuild@1
-          name: build-step
-          displayName: 'Build Step'
+          name: test-step
+          displayName: 'Test Step'
           inputs:
-            golangVersion: 1.15
+            golangVersion: 1.13
             goals: | 
               mkdir bin
-              GOOS=linux ARCH=amd64 go build -o bin/commdetection.amd64 commdetection
-              chmod +X bin/commdetection.amd64
-              ./bin/commdetection.amd64
+              GOOS=linux ARCH=amd64
+              go test --timeout=30s -covermode=atomic commdetection/...
+              go test -bench=. --timeout=30s commdetection/...
+              go build -o bin/commdetecion.amd64 commdetection
             uploadArtifact: true
             uploadArtifactOptions:
               artifactPath: '/bin'
