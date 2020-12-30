@@ -25,4 +25,4 @@ stages:
             uploadArtifactOptions:
               artifactPath: '/bin'
               artifactRepository: 'commdetection'
-              artifactName: 'cli-build'
+              artifactName: 'commdetection'
