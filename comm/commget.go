@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2020-12-28 17:29:05
+ * @LastEditTime: 2020-12-30 12:19:36
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -19,7 +19,7 @@ import (
 // Command contains command and its flags or symbols
 type Command struct {
 	CommName string   `json:"commName"`
-	Args     []string `json:"flags"`
+	Args     []string `json:"args"`
 }
 
 // GetCommands returns a list of commands preprocessed which first get commands from file then net
