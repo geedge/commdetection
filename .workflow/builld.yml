@@ -1,0 +1,28 @@
+name: commdetection-build
+displayName: 'Golang command-detection build'
+triggers:
+  push:
+    - matchType: PRECISE
+      branch: master
+commitMessage: ''
+stages:
+  - stage:
+      name: commdetection-stage
+      displayName: 'commdetection Build stage'
+      failFast: false
+      steps:
+        - step: golangbuild@1
+          name: build-step
+          displayName: 'Build Step'
+          inputs:
+            golangVersion: 1.15
+            goals: | 
+              mkdir bin
+              GOOS=linux ARCH=amd64 go build -o bin/commdetection.amd64 commdetection
+              chmod +X bin/commdetection.amd64
+              ./bin/commdetection.amd64
+            uploadArtifact: true
+            uploadArtifactOptions:
+              artifactPath: '/bin'
+              artifactRepository: 'commdetection'
+              artifactName: 'commdetection'
