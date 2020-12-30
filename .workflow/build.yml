@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: commdetection-build
 displayName: 'Golang command-detection build'
 triggers:
