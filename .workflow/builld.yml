@@ -15,7 +15,7 @@ stages:
           name: build-step
           displayName: 'Build Step'
           inputs:
-            golangVersion: 1.15
+            golangVersion: 1.13
             goals: | 
               mkdir bin
               GOOS=linux ARCH=amd64 go build -o bin/commdetection.amd64 commdetection
