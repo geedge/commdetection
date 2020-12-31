@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 11:28:49
- * @LastEditTime: 2020-12-31 11:01:47
+ * @LastEditTime: 2020-12-31 14:05:30
  * @LastEditors: Please set LastEditors
  * @Description: Test UnmarshalSetting and MarshalSetting
  * @FilePath: /commdetection/rules/rulestype_test.go
@@ -36,12 +36,12 @@ func TestEvaluatePathRule(t *testing.T) {
 		cs := CommScore{
 			Command: comm.Command{
 				CommName: "wget",
-				Args:     []string{"/root/go/src/commdetection/rules/rulesjson/rules.json"},
+				Args:     []string{"rules.json"},
 			},
 			Score: 100,
 		}
 		cs = EvaluatePathRule(cs)
-		if cs.Score >= 0 {
+		if cs.Score >= 0 && cs.Score < 100 {
 			log.Printf("result score is %f", cs.Score)
 		} else {
 			t.Errorf("score is not as predicted")

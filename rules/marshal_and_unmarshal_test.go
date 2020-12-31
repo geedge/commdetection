@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 14:31:00
- * @LastEditTime: 2020-12-28 17:21:35
+ * @LastEditTime: 2020-12-31 13:59:05
  * @LastEditors: Please set LastEditors
  * @Description: Test marshalling.go
  * @FilePath: /commdetection/rules/marshalling_test.go
@@ -59,7 +59,7 @@ func TestUnmarshalSensitiveCommSetting(t *testing.T) {
 func TestMarshalSensitivePathSetting(t *testing.T) {
 	spaths := SPaths{
 		{
-			Path:        "/root/go/src/commdetection/rules",
+			Path:        "/root",
 			Coefficient: 0.7,
 		},
 	}
@@ -80,7 +80,7 @@ func TestUnmarshalSensitivePathSetting(t *testing.T) {
 	}
 	predict := SPaths{
 		{
-			Path:        "/root/go/src/commdetection/rules",
+			Path:        "/root",
 			Coefficient: 0.7,
 		},
 	}
