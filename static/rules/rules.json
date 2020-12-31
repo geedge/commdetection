@@ -1,1 +1,1 @@
-[{"name":"RuleA","rulefunc":"EvaluateCommandRule"}]
+[{"name":"pathrule","rulefunc":"EvaluatePathRule"}]

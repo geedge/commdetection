@@ -1,5 +1,5 @@
 name: commdetection-build
-displayName: 'Golang command-detection build'
+displayName: 'Golang command-detection test&build'
 triggers:
   push:
     - matchType: PRECISE
@@ -7,8 +7,8 @@ triggers:
 commitMessage: ''
 stages:
   - stage:
-      name: commdetection-test-stage
-      displayName: 'commdetection test stage'
+      name: commdetection-test-and-build-stage
+      displayName: 'commdetection test and build stage'
       failFast: true
       steps:
         - step: golangbuild@1
