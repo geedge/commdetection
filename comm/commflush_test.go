@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:51:28
- * @LastEditTime: 2020-12-28 17:30:46
- * @LastEditors: your name
+ * @LastEditTime: 2020-12-31 10:47:17
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/comm/commflush_test.go
  */
@@ -22,7 +22,7 @@ func TestFlushCommands(t *testing.T) {
 				Args:     []string{},
 			},
 			{
-				CommName: "apt",
+				CommName: "echo",
 				Args:     []string{"install", "wget"},
 			},
 			{
@@ -52,7 +52,7 @@ func TestFlushCommands(t *testing.T) {
 				Args:     []string{},
 			},
 			{
-				CommName: "apt",
+				CommName: "echo",
 				Args:     []string{"install", "wget"},
 			},
 			{
