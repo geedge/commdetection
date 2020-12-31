@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:51:28
- * @LastEditTime: 2020-12-31 10:47:17
+ * @LastEditTime: 2020-12-31 11:04:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/comm/commflush_test.go
@@ -73,7 +73,7 @@ func TestFlushCommands(t *testing.T) {
 
 	t.Run("FlushCommands with no commands", func(t *testing.T) {
 		commands := []Command{}
-		commands = FlushCommands(commands, []Filter{SimpleCommandFilter})
+		commands = FlushCommands(commands, []Filter{WhichCommandFilter})
 		if !reflect.DeepEqual(commands, []Command{}) {
 			fmt.Println(commands)
 			t.Errorf("results are not as predicted")

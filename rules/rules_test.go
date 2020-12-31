@@ -127,7 +127,7 @@ func TestRule(t *testing.T) {
 
 func TestInitCommScores(t *testing.T) {
 	comms := comm.GetCommands("/root/.bash_history", "")
-	comms = comm.FlushCommands(comms, []comm.Filter{comm.ManCommandFilter})
+	comms = comm.FlushCommands(comms, []comm.Filter{comm.WhichCommandFilter})
 	css := InitCommScores(comms)
 	fmt.Println(css)
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-07 09:22:53
- * @LastEditTime: 2020-12-28 16:25:51
+ * @LastEditTime: 2020-12-31 11:04:07
  * @LastEditors: Please set LastEditors
  * @Description: this file flushes invalid commands using various types of filters
  * @FilePath: /commdetection/commflush.go

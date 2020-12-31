@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 11:28:49
- * @LastEditTime: 2020-12-19 10:45:05
+ * @LastEditTime: 2020-12-31 11:01:47
  * @LastEditors: Please set LastEditors
  * @Description: Test UnmarshalSetting and MarshalSetting
  * @FilePath: /commdetection/rules/rulestype_test.go
@@ -62,7 +62,7 @@ func BenchmarkEvaluateCommandRule(b *testing.B) {
 
 func BenchmarkEvaluatePathRule(b *testing.B) {
 	comms := comm.GetCommands("/root/.bash_history", "")
-	comms = comm.FlushCommands(comms, []comm.Filter{comm.ManCommandFilter})
+	comms = comm.FlushCommands(comms, []comm.Filter{comm.WhichCommandFilter})
 	css := InitCommScores(comms)
 	b.ResetTimer()
 	for _, cs := range css {
