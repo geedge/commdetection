@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 10:59:19
- * @LastEditTime: 2020-12-31 14:11:38
+ * @LastEditTime: 2021-01-04 11:21:49
  * @LastEditors: Please set LastEditors
  * @Description: Unmarshal and marshal various types of settings and rules
  * @FilePath: /commdetection/rules/ruletypes.go
@@ -75,7 +75,7 @@ func EvaluatePathRule(cs CommScore) CommScore {
 		for range spaths {
 			ratio += <-out
 		}
-		// when raitio is larger than threshold 0.1
+		// when ratio is larger than threshold 0.1
 		if ratio > 0.1 {
 			// execute evaluation formula
 			cs.Score *= 1.0 - ratio*(1.0-spath.Coefficient)
