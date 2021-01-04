@@ -1,13 +1,13 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 14:31:00
- * @LastEditTime: 2020-12-31 14:50:23
+ * @LastEditTime: 2021-01-04 18:45:21
  * @LastEditors: Please set LastEditors
  * @Description: Test marshalling.go
  * @FilePath: /commdetection/rules/marshalling_test.go
  */
 
-package rules
+package model
 
 import (
 	"encoding/json"
@@ -41,16 +41,7 @@ func TestUnmarshalSensitiveCommSetting(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	predict := SComms{
-		{
-			Comm:        "wget",
-			Coefficient: 0.8,
-		},
-		{
-			Comm:        "apt",
-			Coefficient: 1.0,
-		},
-	}
+	predict := SComms{{Comm: "wget", Coefficient: 0.8}, {Comm: "apt", Coefficient: 1}}
 	if !reflect.DeepEqual(scomms, predict) {
 		t.Errorf("results are not as predicted")
 	}

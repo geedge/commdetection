@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-28 16:05:24
- * @LastEditTime: 2020-12-29 15:39:34
+ * @LastEditTime: 2021-01-04 19:02:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/router/endpoint_test.go
@@ -11,7 +11,7 @@ package router
 
 import (
 	"commdetection/cmd"
-	"commdetection/rules"
+	"commdetection/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,7 +22,7 @@ import (
 var (
 	e          *httpexpect.Expect
 	url        string
-	testscomms = rules.SComms{
+	testscomms = model.SComms{
 		{
 			Comm:        "sudo",
 			Coefficient: 0.1,
@@ -36,13 +36,13 @@ var (
 			Coefficient: 0.2,
 		},
 	}
-	testspaths = rules.SPaths{
+	testspaths = model.SPaths{
 		{
 			Path:        "/root/go/src/commdetection",
 			Coefficient: 0.5,
 		},
 	}
-	testrs = rules.Rules{
+	testrs = model.Rules{
 		{
 			Name:     "pathrule",
 			RuleFunc: "EvaluatePathRule",

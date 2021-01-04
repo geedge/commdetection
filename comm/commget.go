@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2020-12-30 12:19:36
+ * @LastEditTime: 2021-01-04 15:59:10
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -20,6 +20,7 @@ import (
 type Command struct {
 	CommName string   `json:"commName"`
 	Args     []string `json:"args"`
+	Flags    []string `json:"flags,omitempty"`
 }
 
 // GetCommands returns a list of commands preprocessed which first get commands from file then net
@@ -60,20 +61,24 @@ func splitCommandsInLine(tComm []string) []Command {
 	newComm := Command{
 		CommName: "",
 		Args:     []string{},
+		Flags:    []string{},
 	}
 	for commNum, comm := range tComm {
 		if commNum == 0 {
 			newComm.CommName = comm
-		} else if comm != "&&" {
-			newComm.Args = append(newComm.Args, comm)
-		} else {
+		} else if comm == "&&" { // comm is the separator of the whole commmand
 			commands = append(commands, splitCommandsInLine(tComm[commNum+1:])...)
 			break
+		} else if comm[0] != '-' { // comm is a flag
+			newComm.Args = append(newComm.Args, comm)
+		} else { // comm is just a normal argument
+			newComm.Flags = append(newComm.Flags, comm)
 		}
 	}
 	if !reflect.DeepEqual(newComm, Command{
 		CommName: "",
 		Args:     []string{},
+		Flags:    []string{},
 	}) {
 		commands = append([]Command{newComm}, commands...)
 	}

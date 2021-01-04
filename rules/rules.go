@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:00
- * @LastEditTime: 2020-12-29 14:29:31
+ * @LastEditTime: 2021-01-04 16:44:06
  * @LastEditors: Please set LastEditors
  * @Description: rules provide all the rules to check the commands' availability and set score of every command
  * @FilePath: /commdetection/rules/commcheck.go
@@ -11,21 +11,11 @@ package rules
 
 import (
 	"commdetection/logger"
+	"commdetection/model"
 )
 
-// Rule defines a rule's func and its name
-type Rule struct {
-	Name     string `json:"name"`
-	RuleFunc string `json:"rulefunc"`
-}
-
-// Rules is the slice of Rule
-type Rules []Rule
-
-type evaluation func(CommScore) CommScore
-
 // AddRule adds one rule to the rules
-func AddRule(rs Rules, rule Rule) Rules {
+func AddRule(rs model.Rules, rule model.Rule) model.Rules {
 	for _, r := range rs {
 		if r.Name == rule.Name {
 			logger.Warnf("%s already existed", rule.Name)
@@ -37,7 +27,7 @@ func AddRule(rs Rules, rule Rule) Rules {
 }
 
 // DeleteRuleByName deletes one rule by the name of the rule
-func DeleteRuleByName(r Rules, ruleName string) Rules {
+func DeleteRuleByName(r model.Rules, ruleName string) model.Rules {
 	existed := false
 	for index, rule := range r {
 		if rule.Name == ruleName {
@@ -52,14 +42,14 @@ func DeleteRuleByName(r Rules, ruleName string) Rules {
 }
 
 // CreateRule creates one rule with name and rule func and return a Rule
-func CreateRule(name string, rule string) (r Rule) {
+func CreateRule(name string, rule string) (r model.Rule) {
 	r.Name = name
 	r.RuleFunc = rule
 	return
 }
 
 // EvaluateCommScore evaluates scores of the commands in the css
-func EvaluateCommScore(css []CommScore, rs Rules) []CommScore {
+func EvaluateCommScore(css []model.CommScore, rs model.Rules) []model.CommScore {
 	defer func() {
 		err := recover()
 		if err != nil {
@@ -72,7 +62,7 @@ func EvaluateCommScore(css []CommScore, rs Rules) []CommScore {
 	}
 	for index := 0; index < len(css); index++ {
 		for _, r := range rs {
-			css[index] = ruleFuncMap[r.RuleFunc](css[index])
+			css[index] = RuleFuncMap[r.RuleFunc](css[index])
 		}
 	}
 	return css

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-02 17:09:14
- * @LastEditTime: 2020-12-23 11:46:52
+ * @LastEditTime: 2021-01-04 16:00:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/preprocessing/commget_test.go
@@ -60,14 +60,17 @@ func TestSplitCommandsInLine(t *testing.T) {
 			{
 				CommName: "ls",
 				Args:     []string{},
+				Flags:    []string{},
 			},
 			{
 				CommName: "cp",
-				Args:     []string{"-s", "abc"},
+				Args:     []string{"abc"},
+				Flags:    []string{"-s"},
 			},
 			{
 				CommName: "goc",
 				Args:     []string{},
+				Flags:    []string{},
 			},
 		}
 		if !reflect.DeepEqual(commands, predict) {

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-28 15:53:37
- * @LastEditTime: 2020-12-29 16:36:13
+ * @LastEditTime: 2021-01-04 16:46:56
  * @LastEditors: Please set LastEditors
  * @Description: endpoint.go contains all the endpoints
  * @FilePath: /commdetection/router/endpoint.go
@@ -12,7 +12,7 @@ package router
 import (
 	"commdetection/cmd"
 	"commdetection/logger"
-	"commdetection/rules"
+	"commdetection/model"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -65,7 +65,7 @@ func startEvaluateEndpoint(c *gin.Context) {
 // getCommrulesEndpoint gets all the command rules stored in the json file
 // if error happened, handleErr will be executed
 func getCommrulesEndpoint(c *gin.Context) {
-	scomms, err := rules.UnmarshalSensitiveCommSetting()
+	scomms, err := model.UnmarshalSensitiveCommSetting()
 	if err != nil {
 		handleErr(c, err)
 		return
@@ -89,12 +89,12 @@ func getCommrulesEndpoint(c *gin.Context) {
 //     ]
 // }
 func setCommrulesEndpoint(c *gin.Context) {
-	commrules := rules.SComms{}
+	commrules := model.SComms{}
 	if err := c.ShouldBind(&commrules); err != nil {
 		handleErr(c, err)
 		return
 	}
-	if err := rules.MarshalSensitiveCommSetting(commrules); err != nil {
+	if err := model.MarshalSensitiveCommSetting(commrules); err != nil {
 		handleErr(c, err)
 		return
 	}
@@ -104,7 +104,7 @@ func setCommrulesEndpoint(c *gin.Context) {
 }
 
 func getPathrulesEndpoint(c *gin.Context) {
-	spaths, err := rules.UnmarshalSensitivePathSetting()
+	spaths, err := model.UnmarshalSensitivePathSetting()
 	if err != nil {
 		handleErr(c, err)
 		return
@@ -128,12 +128,12 @@ func getPathrulesEndpoint(c *gin.Context) {
 //     ]
 // }
 func setPathrulesEndpoint(c *gin.Context) {
-	pathrules := rules.SPaths{}
+	pathrules := model.SPaths{}
 	if err := c.ShouldBind(&pathrules); err != nil {
 		handleErr(c, err)
 		return
 	}
-	if err := rules.MarshalSensitivePathSetting(pathrules); err != nil {
+	if err := model.MarshalSensitivePathSetting(pathrules); err != nil {
 		handleErr(c, err)
 		return
 	}
@@ -143,7 +143,7 @@ func setPathrulesEndpoint(c *gin.Context) {
 }
 
 func getEvaluationRulesEndpoint(c *gin.Context) {
-	rs, err := rules.UnmarshalSensitivePathSetting()
+	rs, err := model.UnmarshalSensitivePathSetting()
 	if err != nil {
 		handleErr(c, err)
 		return
@@ -167,12 +167,12 @@ func getEvaluationRulesEndpoint(c *gin.Context) {
 //     ]
 // }
 func setEvaluationRulesEndpoint(c *gin.Context) {
-	rs := rules.Rules{}
+	rs := model.Rules{}
 	if err := c.ShouldBind(&rs); err != nil {
 		handleErr(c, err)
 		return
 	}
-	if err := rules.MarshalEvaluationRules(rs); err != nil {
+	if err := model.MarshalEvaluationRules(rs); err != nil {
 		handleErr(c, err)
 		return
 	}

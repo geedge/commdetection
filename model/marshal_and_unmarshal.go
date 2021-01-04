@@ -1,13 +1,13 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 13:57:06
- * @LastEditTime: 2020-12-28 17:12:09
+ * @LastEditTime: 2021-01-04 17:27:49
  * @LastEditors: Please set LastEditors
  * @Description: Includes various marshalling ways
  * @FilePath: /commdetection/rules/marshalling.go
  */
 
-package rules
+package model
 
 import (
 	"commdetection/logger"
@@ -20,14 +20,6 @@ import (
 	"reflect"
 	"runtime"
 	"strings"
-)
-
-//TODO: Temporarily use the funcMap to map the stringVal and the funcRule, will use a func to map later
-var (
-	ruleFuncMap = map[string]evaluation{
-		"EvaluateCommandRule": EvaluateCommandRule,
-		"EvaluatePathRule":    EvaluatePathRule,
-	}
 )
 
 // getFuncName returns a function's name
@@ -49,9 +41,9 @@ func getFuncName(i interface{}, seps ...rune) string {
 
 // MarshalEvaluationRules marshals rules.Rules to json file
 func MarshalEvaluationRules(rs Rules) (err error) {
-	fileName := yaml.GetYamlPathsSetting("rules")
+	fileName := yaml.GetMultiRulesSetting()
 	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rulesjson", "rules.json")
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "rules.json")
 	}
 	err = marshalSetting(fileName, rs)
 	return
@@ -59,9 +51,9 @@ func MarshalEvaluationRules(rs Rules) (err error) {
 
 // UnmarshalEvaluationRules unmarshal rules from a json file
 func UnmarshalEvaluationRules() (r Rules, err error) {
-	fileName := yaml.GetYamlPathsSetting("rules")
+	fileName := yaml.GetMultiRulesSetting()
 	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rulesjson", "rules.json")
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "rules.json")
 	}
 	err = unmarshalSetting(fileName, r)
 	if err != nil {
@@ -72,18 +64,18 @@ func UnmarshalEvaluationRules() (r Rules, err error) {
 
 // MarshalSensitivePathSetting marshals spaths setting to a json file
 func MarshalSensitivePathSetting(spaths SPaths) error {
-	fileName := yaml.GetYamlPathsSetting("pathrules")
+	fileName := yaml.GetPathRulesSetting()
 	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rulesjson", "pathrules.json")
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "pathrules.json")
 	}
 	return marshalSetting(fileName, spaths)
 }
 
 // UnmarshalSensitivePathSetting unmarshals spaths setting json file to spaths variable
 func UnmarshalSensitivePathSetting() (spaths SPaths, err error) {
-	fileName := yaml.GetYamlPathsSetting("pathrules")
+	fileName := yaml.GetPathRulesSetting()
 	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rulesjson", "pathrules.json")
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "pathrules.json")
 	}
 	err = unmarshalSetting(fileName, &spaths)
 	if err != nil {
@@ -94,22 +86,44 @@ func UnmarshalSensitivePathSetting() (spaths SPaths, err error) {
 
 // MarshalSensitiveCommSetting marshals scomms setting to a json file
 func MarshalSensitiveCommSetting(scomms []SComm) error {
-	fileName := yaml.GetYamlPathsSetting("commrules")
+	fileName := yaml.GetCommRulesSetting()
 	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rulesjson", "commrules.json")
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "commrules.json")
 	}
 	return marshalSetting(fileName, scomms)
 }
 
 // UnmarshalSensitiveCommSetting unmarshals scomms setting json file to scomms variable
 func UnmarshalSensitiveCommSetting() (scomms SComms, err error) {
-	fileName := yaml.GetYamlPathsSetting("commrules")
+	fileName := yaml.GetCommRulesSetting()
 	if fileName == "" {
-		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rulesjson", "commrules.json")
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "commrules.json")
 	}
 	err = unmarshalSetting(fileName, &scomms)
 	if err != nil {
 		logger.Warnf("json file settings conversion to %s failed, please check json file %s is correct or not\n", reflect.TypeOf(scomms).Name(), fileName)
+	}
+	return
+}
+
+// MarshalUnsensitiveWebsiteSetting marshals ussites setting to a json file
+func MarshalUnsensitiveWebsiteSetting(ussites Ussites) error {
+	fileName := yaml.GetWebsiteRulesSetting()
+	if fileName == "" {
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "websiterules.json")
+	}
+	return marshalSetting(fileName, ussites)
+}
+
+// UnMarshalUnsensitiveWebsiteSetting unmarshals ussites setting json file to ussites variable
+func UnMarshalUnsensitiveWebsiteSetting() (ussites Ussites, err error) {
+	fileName := yaml.GetWebsiteRulesSetting()
+	if fileName == "" {
+		fileName = filepath.Join(os.Getenv("COMMDEPATH"), "static", "rules", "websiterules.json")
+	}
+	err = unmarshalSetting(fileName, &ussites)
+	if err != nil {
+		logger.Warnf("json file settings conversion to %s failed, please check json file %s is correct or not\n", reflect.TypeOf(ussites).Name(), fileName)
 	}
 	return
 }

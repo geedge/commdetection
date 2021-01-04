@@ -1,7 +1,2 @@
-# The base path is the project's path or env variable COMMDEPATH
-paths:
-  multirulespath: static/rules/rules.json
-  commrulepath: static/rules/commrules.json
-  pathrulepath: static/rules/pathrules.json
 ginmode: release
-port: 8080
+port: 8000

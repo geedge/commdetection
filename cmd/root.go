@@ -12,6 +12,7 @@ package cmd
 import (
 	"commdetection/comm"
 	"commdetection/logger"
+	"commdetection/model"
 	"commdetection/rules"
 
 	"github.com/sirupsen/logrus"
@@ -34,7 +35,7 @@ var (
 	logLevel    uint32
 
 	filters = []comm.Filter{}
-	rs      = rules.Rules{}
+	rs      = model.Rules{}
 )
 
 // Execute executes the command
@@ -64,12 +65,12 @@ func root() {
 	for _, ev := range evaluations {
 		switch ev {
 		case "command":
-			rs = rules.AddRule(rs, rules.Rule{
+			rs = rules.AddRule(rs, model.Rule{
 				Name:     "Command",
 				RuleFunc: "EvaluateCommandRule",
 			})
 		case "path":
-			rs = rules.AddRule(rs, rules.Rule{
+			rs = rules.AddRule(rs, model.Rule{
 				Name:     "Path",
 				RuleFunc: "EvaluatePathRule",
 			})
@@ -91,7 +92,7 @@ func root() {
 }
 
 // StartEvaluateCommands starts evaluating commands using variables rootCmd provided
-func StartEvaluateCommands(filename string) []rules.CommScore {
+func StartEvaluateCommands(filename string) []model.CommScore {
 	// 从文件中获取路径，默认获取路径为/root/.bash_history
 	logger.Debugf("Start getting commmands from \"%s\"", filename)
 	commands := comm.GetCommands(filename, "")

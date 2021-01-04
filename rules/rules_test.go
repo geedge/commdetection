@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:09
- * @LastEditTime: 2020-12-28 17:21:59
+ * @LastEditTime: 2021-01-04 16:43:21
  * @LastEditors: Please set LastEditors
  * @Description: Test commrules.go
  * @FilePath: /commdetection/rules/commrules_test.go
@@ -10,13 +10,14 @@ package rules
 
 import (
 	"commdetection/comm"
+	"commdetection/model"
 	"fmt"
 	"testing"
 )
 
 func TestRule(t *testing.T) {
 	t.Run("Test AddRule", func(t *testing.T) {
-		r := Rules{
+		r := model.Rules{
 			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
@@ -26,11 +27,11 @@ func TestRule(t *testing.T) {
 				RuleFunc: "EvaluatePathRule",
 			},
 		}
-		r = AddRule(r, Rule{
+		r = AddRule(r, model.Rule{
 			Name:     "RuleC",
 			RuleFunc: "EvaluateCommandRule",
 		})
-		predict := Rules{
+		predict := model.Rules{
 			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
@@ -56,12 +57,12 @@ func TestRule(t *testing.T) {
 				return
 			}
 		}
-		cs := CommScore{
+		cs := model.CommScore{
 			Command: comm.Command{CommName: "wget"},
 			Score:   100,
 		}
 		for _, rule := range r {
-			cs = ruleFuncMap[rule.RuleFunc](cs)
+			cs = RuleFuncMap[rule.RuleFunc](cs)
 		}
 		if cs.Score != 100*0.8*0.8 {
 			t.Errorf("results are not as predicted")
@@ -69,7 +70,7 @@ func TestRule(t *testing.T) {
 	})
 
 	t.Run("Test AddRule with the same name", func(t *testing.T) {
-		r := Rules{
+		r := model.Rules{
 			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
@@ -79,7 +80,7 @@ func TestRule(t *testing.T) {
 				RuleFunc: "EvaluatePathRule",
 			},
 		}
-		r = AddRule(r, Rule{
+		r = AddRule(r, model.Rule{
 			Name:     "RuleA",
 			RuleFunc: "EvaluateCommandRule",
 		})
@@ -89,7 +90,7 @@ func TestRule(t *testing.T) {
 	})
 
 	t.Run("Test DeleteRuleByName", func(t *testing.T) {
-		r := Rules{
+		r := model.Rules{
 			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
@@ -112,13 +113,13 @@ func TestRule(t *testing.T) {
 	})
 
 	t.Run("Test MarshallEvaluationRules", func(t *testing.T) {
-		rs := Rules{
+		rs := model.Rules{
 			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
 			},
 		}
-		err := MarshalEvaluationRules(rs)
+		err := model.MarshalEvaluationRules(rs)
 		if err != nil {
 			t.Error(err)
 		}
@@ -133,7 +134,7 @@ func TestInitCommScores(t *testing.T) {
 }
 
 func TestEvaluateCommScore(t *testing.T) {
-	css := EvaluateCommScore([]CommScore{
+	css := EvaluateCommScore([]model.CommScore{
 		{
 			Command: comm.Command{
 				CommName: "wget",
@@ -142,8 +143,8 @@ func TestEvaluateCommScore(t *testing.T) {
 			Score: 100,
 		},
 	},
-		Rules{
-			Rule{
+		model.Rules{
+			{
 				Name:     "RuleA",
 				RuleFunc: "EvaluateCommandRule",
 			},
