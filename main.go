@@ -12,7 +12,6 @@ package main
 import (
 	"commdetection/cmd"
 	"commdetection/logger"
-	"commdetection/router"
 
 	"github.com/sirupsen/logrus"
 )
@@ -25,5 +24,4 @@ func main() {
 	if err := cmd.Execute(); err != nil {
 		logger.Fatalln(err)
 	}
-	router.StartRouter()
 }

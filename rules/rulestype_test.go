@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 11:28:49
- * @LastEditTime: 2021-01-04 19:06:53
+ * @LastEditTime: 2021-01-05 17:19:57
  * @LastEditors: Please set LastEditors
  * @Description: Test UnmarshalSetting and MarshalSetting
  * @FilePath: /commdetection/rules/rulestype_test.go
@@ -69,7 +69,7 @@ func TestEvaluateWebsiteRule(t *testing.T) {
 }
 
 func BenchmarkEvaluateCommandRule(b *testing.B) {
-	comms := comm.GetCommands("/root/.bash_history", "")
+	comms := comm.GetCommands()
 	comms = comm.FlushCommands(comms, []comm.Filter{comm.WhichCommandFilter})
 	css := InitCommScores(comms)
 	b.ResetTimer()
@@ -79,7 +79,7 @@ func BenchmarkEvaluateCommandRule(b *testing.B) {
 }
 
 func BenchmarkEvaluatePathRule(b *testing.B) {
-	comms := comm.GetCommands("/root/.bash_history", "")
+	comms := comm.GetCommands()
 	comms = comm.FlushCommands(comms, []comm.Filter{comm.WhichCommandFilter})
 	css := InitCommScores(comms)
 	b.ResetTimer()
@@ -89,7 +89,7 @@ func BenchmarkEvaluatePathRule(b *testing.B) {
 }
 
 func BenchmarkEvaluateWebsiteRule(b *testing.B) {
-	comms := comm.GetCommands("/root/.bash_history", "")
+	comms := comm.GetCommands()
 	comms = comm.FlushCommands(comms, []comm.Filter{comm.WhichCommandFilter})
 	css := InitCommScores(comms)
 	b.ResetTimer()

@@ -8,19 +8,3 @@
  */
 
 package router
-
-import (
-	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	"github.com/gavv/httpexpect"
-)
-
-func TestStart(t *testing.T) {
-	srv := httptest.NewServer(router)
-	eng := httpexpect.New(t, srv.URL)
-	eng.GET("/version").
-		Expect().
-		Status(http.StatusOK)
-}

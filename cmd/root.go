@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-19 11:59:02
- * @LastEditTime: 2020-12-28 16:42:48
+ * @LastEditTime: 2021-01-05 18:04:44
  * @LastEditors: Please set LastEditors
  * @Description: root of the commdetection cmd
  * @FilePath: /commdetection/cmd/root.go
@@ -13,7 +13,13 @@ import (
 	"commdetection/comm"
 	"commdetection/logger"
 	"commdetection/model"
+	"commdetection/router"
 	"commdetection/rules"
+	"encoding/json"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -89,21 +95,19 @@ func root() {
 	case "man":
 		filters = append(filters, comm.ManCommandFilter)
 	}
-}
 
-// StartEvaluateCommands starts evaluating commands using variables rootCmd provided
-func StartEvaluateCommands(filename string) []model.CommScore {
-	// 从文件中获取路径，默认获取路径为/root/.bash_history
-	logger.Debugf("Start getting commmands from \"%s\"", filename)
-	commands := comm.GetCommands(filename, "")
-	// 清理无效命令，利用filter函数保留有效命令以便提供分析
-	logger.Debugf("Start flushing commands using \"%s\" filter", filterStr)
-	commands = comm.FlushCommands(commands, filters)
-	// 初始化命令得分
-	logger.Debugf("Initializing commands' scores")
-	css := rules.InitCommScores(commands)
-	// 评估命令，利用rs中保留的规则进行评估
-	logger.Debugf("Evaluating commands' scores using %s evaluations", evaluations)
-	css = rules.EvaluateCommScore(css, rs)
-	return css
+	go func() {
+		for {
+			comms := comm.GetCommands()
+			comms = comm.FlushCommands(comms, filters)
+			css := rules.InitCommScores(comms)
+			css = rules.EvaluateCommScore(css, rs)
+			jsonBuf, _ := json.Marshal(css)
+			ioutil.WriteFile(filepath.Join(os.Getenv("COMMDEPATH"), "static", "base", "output.json"), jsonBuf, os.ModeAppend)
+			logger.Debugln("New output.json file is built")
+			time.Sleep(3 * time.Minute)
+		}
+	}()
+
+	router.StartRouter()
 }

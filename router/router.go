@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-23 13:17:08
- * @LastEditTime: 2020-12-29 16:33:47
+ * @LastEditTime: 2021-01-05 17:54:33
  * @LastEditors: Please set LastEditors
  * @Description: router.go defines gin.Engine and its router
  * @FilePath: /commdetection/route/router.go
@@ -21,15 +21,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-)
-
-var (
-	addr = yaml.GetPort()
-	// StaticRoute sets the base route of the gin static filesystem
-	StaticRoute = filepath.Join(os.Getenv("COMMDEPATH"), "static", "base")
-
-	router *gin.Engine
-	srv    *http.Server
 )
 
 func init() {
@@ -53,8 +44,18 @@ func init() {
 	manageRouter()
 }
 
+var (
+	addr = yaml.GetPort()
+	// StaticRoute sets the base route of the gin static filesystem
+	StaticRoute = filepath.Join(os.Getenv("COMMDEPATH"), "static", "base")
+
+	router *gin.Engine
+	srv    *http.Server
+)
+
 // StartRouter starts and sets ending method for gin engine
 func StartRouter() {
+
 	go func() {
 		// engine start on http://127.0.0.1:8000
 		logger.Debugln("Server started at", srv.Addr)
@@ -81,11 +82,9 @@ func StartRouter() {
 func manageRouter() {
 	// "/static" stores all the static file of the system
 	router.Static("/static", StaticRoute)
-	router.GET("/version", verEndpoint)
 	evar := router.Group("/evaluation")
 	{
 		evar.POST("/upload", uploadCommEndpoint)
-		evar.GET("/start", startEvaluateEndpoint)
 	}
 	commr := router.Group("/commrules")
 	{

@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:00
- * @LastEditTime: 2021-01-04 16:44:06
+ * @LastEditTime: 2021-01-05 17:58:28
  * @LastEditors: Please set LastEditors
  * @Description: rules provide all the rules to check the commands' availability and set score of every command
  * @FilePath: /commdetection/rules/commcheck.go

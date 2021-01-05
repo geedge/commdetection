@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:09
- * @LastEditTime: 2021-01-04 16:43:21
+ * @LastEditTime: 2021-01-05 17:19:26
  * @LastEditors: Please set LastEditors
  * @Description: Test commrules.go
  * @FilePath: /commdetection/rules/commrules_test.go
@@ -127,7 +127,7 @@ func TestRule(t *testing.T) {
 }
 
 func TestInitCommScores(t *testing.T) {
-	comms := comm.GetCommands("/root/.bash_history", "")
+	comms := comm.GetCommands()
 	comms = comm.FlushCommands(comms, []comm.Filter{comm.WhichCommandFilter})
 	css := InitCommScores(comms)
 	fmt.Println(css)

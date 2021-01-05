@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-28 16:05:24
- * @LastEditTime: 2021-01-04 19:02:57
+ * @LastEditTime: 2021-01-05 15:52:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/router/endpoint_test.go
@@ -10,7 +10,6 @@
 package router
 
 import (
-	"commdetection/cmd"
 	"commdetection/model"
 	"net/http"
 	"net/http/httptest"
@@ -59,26 +58,10 @@ func init() {
 func TestEndpoint(t *testing.T) {
 	e = httpexpect.New(t, url)
 
-	t.Run("Test verEndpoint", func(t *testing.T) {
-		e.GET("/version").
-			Expect().
-			Status(http.StatusOK).
-			JSON().Object().
-			ValueEqual("ver", cmd.Ver)
-	})
-
 	t.Run("Test uploadCommEndpoint", func(t *testing.T) {
 		e.POST("/evaluation/upload").
 			WithMultipart().
 			WithFile("commfile", "/root/.bash_history").
-			Expect().
-			Status(http.StatusOK).
-			JSON().Object().
-			ValueEqual("message", "ok")
-	})
-
-	t.Run("Test startEvaluateEndpoint", func(t *testing.T) {
-		e.GET("/evaluation/start").
 			Expect().
 			Status(http.StatusOK).
 			JSON().Object().

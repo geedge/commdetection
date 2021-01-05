@@ -1,11 +1,10 @@
 module commdetection
 
-go 1.15
+go 1.13
 
 require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/andybalholm/brotli v1.0.1 // indirect
-	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/gavv/httpexpect v2.0.0+incompatible
@@ -15,9 +14,7 @@ require (
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
-	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/klauspost/compress v1.11.4 // indirect
@@ -31,10 +28,7 @@ require (
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
 	github.com/smartystreets/assertions v1.2.0 // indirect
-	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/cobra v1.1.1
-	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/ugorji/go v1.2.2 // indirect
 	github.com/valyala/fasthttp v1.19.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect

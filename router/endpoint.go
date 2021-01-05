@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-28 15:53:37
- * @LastEditTime: 2021-01-04 16:46:56
+ * @LastEditTime: 2021-01-05 11:53:02
  * @LastEditors: Please set LastEditors
  * @Description: endpoint.go contains all the endpoints
  * @FilePath: /commdetection/router/endpoint.go
@@ -10,23 +10,13 @@
 package router
 
 import (
-	"commdetection/cmd"
 	"commdetection/logger"
 	"commdetection/model"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
-	"os"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
-
-func verEndpoint(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"ver": cmd.Ver,
-	})
-}
 
 // uploadCommEndpoint uploads the file storing commands to the system
 func uploadCommEndpoint(c *gin.Context) {
@@ -43,22 +33,6 @@ func uploadCommEndpoint(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
-	})
-}
-
-// startEvaluateEndpoint let the system start to evaluate commands and their args and gives the score to the user
-func startEvaluateEndpoint(c *gin.Context) {
-	css := cmd.StartEvaluateCommands(cmd.GetFileName())
-	jsonBuf, _ := json.Marshal(css)
-	logger.Debugln("Storing result to \"static/output.json\" file")
-	if err := ioutil.WriteFile(filepath.Join(StaticRoute, "output.json"), jsonBuf, os.ModeAppend); err != nil {
-		handleErr(c, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "ok",
-		"scores":  css,
 	})
 }
 

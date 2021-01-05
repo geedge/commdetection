@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:51:28
- * @LastEditTime: 2020-12-31 11:04:35
+ * @LastEditTime: 2021-01-05 17:10:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/comm/commflush_test.go
@@ -84,7 +84,7 @@ func TestFlushCommands(t *testing.T) {
 func BenchmarkFlushCommands(b *testing.B) {
 	b.Run("FlushCommands BenchMark Test", func(b *testing.B) {
 		filters := []Filter{WhichCommandFilter}
-		commands := GetCommands("/root/.bash_history", "")
+		commands := GetCommands()
 		b.ResetTimer()
 		commands = FlushCommands(commands, filters)
 		b.StopTimer()
