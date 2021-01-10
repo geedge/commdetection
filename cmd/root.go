@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-19 11:59:02
- * @LastEditTime: 2021-01-05 18:04:44
+ * @LastEditTime: 2021-01-06 09:51:43
  * @LastEditors: Please set LastEditors
  * @Description: root of the commdetection cmd
  * @FilePath: /commdetection/cmd/root.go
@@ -55,16 +55,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&file, "file", "/root/.bash_history", "choose one file storing data of the commands")
 	rootCmd.PersistentFlags().Uint32Var(&logLevel, "loglevel", uint32(logrus.DebugLevel), "choose log level")
 	rootCmd.AddCommand(verCmd) // add version as a subcommand
-}
-
-// GetLogLevel returns loglevel sent by rootCmd
-func GetLogLevel() uint32 {
-	return logLevel
-}
-
-// GetFileName returns filename passed by the command line value
-func GetFileName() string {
-	return file
+	logger.LogLevel = logrus.Level(logLevel)
 }
 
 func root() {

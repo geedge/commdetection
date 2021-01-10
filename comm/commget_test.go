@@ -9,6 +9,7 @@
 package comm
 
 import (
+	"commdetection/model"
 	"fmt"
 	"reflect"
 	"strings"
@@ -17,7 +18,7 @@ import (
 
 func TestGetCommands(t *testing.T) {
 	t.Run("Get Commands From history Test", func(t *testing.T) {
-		commands, err := GetCommandsFromHist()
+		commands, err := getCommandsFromHist()
 		if err != nil {
 			t.Error(err)
 		}
@@ -29,7 +30,7 @@ func TestSplitCommandsInLine(t *testing.T) {
 	t.Run("split large command test", func(t *testing.T) {
 		str := "ls && cp -s abc && goc"
 		commands := splitCommandsInLine(strings.Fields(str))
-		predict := []Command{
+		predict := []model.Command{
 			{
 				CommName: "ls",
 				Args:     []string{},
@@ -54,7 +55,7 @@ func TestSplitCommandsInLine(t *testing.T) {
 	})
 }
 
-func checkCommands(commands []Command, t *testing.T) {
+func checkCommands(commands []model.Command, t *testing.T) {
 	for commNum, command := range commands {
 		if command.CommName == "" {
 			t.Errorf("command %d is empty", commNum)

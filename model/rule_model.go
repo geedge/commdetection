@@ -9,10 +9,6 @@
 
 package model
 
-import (
-	"commdetection/comm"
-)
-
 // Rule defines a rule's func and its name
 type Rule struct {
 	Name     string `json:"name"`
@@ -27,8 +23,8 @@ type Evaluation func(CommScore) CommScore
 
 // CommScore includes command name and its score
 type CommScore struct {
-	Command comm.Command `json:"command"`
-	Score   float64      `json:"score"`
+	Command Command `json:"command"`
+	Score   float64 `json:"score"`
 }
 
 // SPath includes sensitive path dir and its sensitive coefficient

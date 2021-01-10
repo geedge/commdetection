@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-09 16:44:44
- * @LastEditTime: 2021-01-04 19:11:44
+ * @LastEditTime: 2021-01-06 12:40:04
  * @LastEditors: Please set LastEditors
  * @Description: Init settings from yaml file
  * @FilePath: /commdetection/init/init.go
@@ -20,16 +20,34 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// MongoSet is the setting for the mongo db connection
+type MongoSet struct {
+	Host    string `yaml:"host"`
+	Port    uint16 `yaml:"port"`
+	User    string `yaml:"user"`
+	Pwd     string `yaml:"password"`
+	Timeout string `yaml:"timeout"`
+}
+
+// RulePaths is the rule paths
+type RulePaths struct {
+	MultiRulesPath   string `yaml:"multirulepath"`
+	CommRulePath     string `yaml:"commrulepath"`
+	PathRulePath     string `yaml:"pathrulepath"`
+	WebsiteRulesPath string `yaml:"webrulepath"`
+}
+
+// GinSet is the setting for the gin-gonic router
+type GinSet struct {
+	GinMode string `yaml:"ginmode"`
+	GinPort uint16 `yaml:"port"`
+}
+
 // Conf defines the configuration from the yaml file
 type Conf struct {
-	Paths struct {
-		MultiRulesPath   string `yaml:"multirulepath"`
-		CommRulePath     string `yaml:"commrulepath"`
-		PathRulePath     string `yaml:"pathrulepath"`
-		WebsiteRulesPath string `yaml:"webrulepath"`
-	} `yaml:"path"`
-	GinMode string `yaml:"ginmode"`
-	Port    uint16 `yaml:"port"`
+	Paths RulePaths `yaml:"path"`
+	Gin   GinSet    `yaml:"gin"`
+	Mongo MongoSet  `yaml:"mongo"`
 }
 
 var conf *Conf
@@ -39,6 +57,7 @@ func init() {
 	buf, err := ioutil.ReadFile(filepath.Join(os.Getenv("COMMDEPATH"), "conf.yaml"))
 	if err != nil {
 		logger.Warnln("read yaml file failed, return NULL string")
+		return
 	}
 	err = yaml.Unmarshal(buf, conf)
 	if err != nil {
@@ -46,10 +65,24 @@ func init() {
 	}
 }
 
+// GetMongoSetting returns the mongo db settings
+func GetMongoSetting() MongoSet {
+	if conf.Mongo.Host == "" {
+		conf.Mongo.Host = "localhost"
+	}
+	if conf.Mongo.Port == 0 {
+		conf.Mongo.Port = 27017
+	}
+	if conf.Mongo.Timeout == "" {
+		conf.Mongo.Timeout = "30s"
+	}
+	return conf.Mongo
+}
+
 // GetPort returns port of the server, if port is undefined, then return :8080
 func GetPort() string {
-	if conf.Port != 0 {
-		return ":" + strconv.Itoa(int(conf.Port))
+	if conf.Gin.GinPort != 0 {
+		return ":" + strconv.Itoa(int(conf.Gin.GinPort))
 	}
 	return ":8080"
 
@@ -57,10 +90,10 @@ func GetPort() string {
 
 // GetGinMode returns ginmode(release, debug, test)
 func GetGinMode() (string, error) {
-	if conf.GinMode == "debug" || conf.GinMode == "release" || conf.GinMode == "test" {
-		return conf.GinMode, nil
+	if conf.Gin.GinMode == "debug" || conf.Gin.GinMode == "release" || conf.Gin.GinMode == "test" {
+		return conf.Gin.GinMode, nil
 	}
-	return "debug", fmt.Errorf("GinMode reads failed. Cannot find %s in any of gin modes", conf.GinMode)
+	return "debug", fmt.Errorf("GinMode reads failed. Cannot find %s in any of gin modes", conf.Gin.GinMode)
 }
 
 // GetCommRulesSetting returns the path storing sensitive command rules

@@ -1,7 +1,7 @@
 <!--
  * @Author: EnderByEndera
  * @Date: 2020-12-23 14:42:44
- * @LastEditTime: 2020-12-23 15:04:02
+ * @LastEditTime: 2021-01-05 18:18:37
  * @LastEditors: Please set LastEditors
  * @Description: Describe the project by English
  * @FilePath: /commdetection/README.en.md
@@ -17,8 +17,9 @@ Commdetection contains the following modules
 2. The comm module includes Command Get and Command Flush functions to obtain all commands and clear invalid commands
 3. logger module, based on logrus custom logger and middleware, middleware is conveniently provided to the gin back-end framework to customize log analysis
 4. The router module, based on the gin-gonic framework, customizes the martini-like API and provides a variety of API interfaces for users to facilitate command analysis and monitoring
-5. The rules module is the core of the instruction detection system. Based on user-defined rules, two modes can be selected for instruction evaluation
-6. yaml module, parsing system yaml configuration file
+5. model module is the base of the models
+6. The rules module is the core of the instruction detection system. Based on user-defined rules, two modes can be selected for instruction evaluation
+7. yaml module, parsing system yaml configuration file
 
 #### Installation
 

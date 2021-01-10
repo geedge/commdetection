@@ -1,7 +1,15 @@
 /*
+ * @Author: your name
+ * @Date: 2021-01-05 10:37:28
+ * @LastEditTime: 2021-01-10 09:39:58
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /commdetection/model/marshal_and_unmarshal.go
+ */
+/*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 13:57:06
- * @LastEditTime: 2021-01-04 17:27:49
+ * @LastEditTime: 2021-01-06 09:56:56
  * @LastEditors: Please set LastEditors
  * @Description: Includes various marshalling ways
  * @FilePath: /commdetection/rules/marshalling.go
@@ -71,7 +79,7 @@ func MarshalSensitivePathSetting(spaths SPaths) error {
 	return marshalSetting(fileName, spaths)
 }
 
-// UnmarshalSensitivePathSetting unmarshals spaths setting json file to spaths variable
+// UnmarshalSensitivePathSetting unmarshal spaths setting json file to spaths variable
 func UnmarshalSensitivePathSetting() (spaths SPaths, err error) {
 	fileName := yaml.GetPathRulesSetting()
 	if fileName == "" {
@@ -93,7 +101,7 @@ func MarshalSensitiveCommSetting(scomms []SComm) error {
 	return marshalSetting(fileName, scomms)
 }
 
-// UnmarshalSensitiveCommSetting unmarshals scomms setting json file to scomms variable
+// UnmarshalSensitiveCommSetting unmarshal scomms setting json file to scomms variable
 func UnmarshalSensitiveCommSetting() (scomms SComms, err error) {
 	fileName := yaml.GetCommRulesSetting()
 	if fileName == "" {
@@ -115,7 +123,7 @@ func MarshalUnsensitiveWebsiteSetting(ussites Ussites) error {
 	return marshalSetting(fileName, ussites)
 }
 
-// UnMarshalUnsensitiveWebsiteSetting unmarshals ussites setting json file to ussites variable
+// UnMarshalUnsensitiveWebsiteSetting unmarshal ussites setting json file to ussites variable
 func UnMarshalUnsensitiveWebsiteSetting() (ussites Ussites, err error) {
 	fileName := yaml.GetWebsiteRulesSetting()
 	if fileName == "" {

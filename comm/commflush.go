@@ -11,6 +11,7 @@ package comm
 
 import (
 	"bytes"
+	"commdetection/model"
 	"errors"
 	"os/exec"
 	"regexp"
@@ -25,7 +26,7 @@ const NOTFOUNDREG = "((.*)[Cc]ommand(.*)not found(.*))|((.*)No such file or dire
 const MANENTRYREG = "No manual entry for (.*)"
 
 // Filter defines filter function to clean invalid commadns or ops given by file or net
-type Filter func([]Command) []Command
+type Filter func([]model.Command) []model.Command
 
 //IntSlice includes a list of n array in order to use sort.Sort() method to sort n
 type IntSlice []int
@@ -40,7 +41,7 @@ type errorNum struct {
 }
 
 // FlushCommands erase all the invalid commands through various filters
-func FlushCommands(commands []Command, filters []Filter) []Command {
+func FlushCommands(commands []model.Command, filters []Filter) []model.Command {
 	for _, filter := range filters {
 		commands = filter(commands)
 	}
@@ -48,12 +49,12 @@ func FlushCommands(commands []Command, filters []Filter) []Command {
 }
 
 // removeOneCommand removes only one command from the list given the index
-func removeOneCommand(commands []Command, n int) []Command {
+func removeOneCommand(commands []model.Command, n int) []model.Command {
 	return append(commands[:n], commands[n+1:]...)
 }
 
 // removeCommands removes a list of commands using index
-func removeCommands(commands []Command, n IntSlice) []Command {
+func removeCommands(commands []model.Command, n IntSlice) []model.Command {
 	if len(n) == 0 {
 		return commands
 	}
@@ -66,7 +67,7 @@ func removeCommands(commands []Command, n IntSlice) []Command {
 
 // SimpleCommandFilter tries to run command without any flag to see whether this command can be run properly
 // Deprecated: use WhichCommandFilter instead
-func SimpleCommandFilter(commands []Command) []Command {
+func SimpleCommandFilter(commands []model.Command) []model.Command {
 	return cmdsFilter(commands, func(command string) error {
 		return checkOneCmd(command, "", NOTFOUNDREG)
 	})
@@ -74,7 +75,7 @@ func SimpleCommandFilter(commands []Command) []Command {
 
 // HelpCommandFilter tries to use "`Command` --help", "`Command` -h" and "`Command` help" to judge `Command` is valid or not
 // Deprecated: use WhichCommandFilter instead
-func HelpCommandFilter(commands []Command) []Command {
+func HelpCommandFilter(commands []model.Command) []model.Command {
 	return cmdsFilter(commands, func(command string) error {
 		if checkOneCmd(command, "--help", NOTFOUNDREG) != nil {
 			return errors.New("command not found or not in $PATH or directory")
@@ -85,14 +86,14 @@ func HelpCommandFilter(commands []Command) []Command {
 
 // ManCommandFilter tries to use "man `Command`" cmd to judge `Command` is valid or not
 // Deprecated: use WhichCommandFilter instead
-func ManCommandFilter(commands []Command) []Command {
+func ManCommandFilter(commands []model.Command) []model.Command {
 	return cmdsFilter(commands, func(command string) error {
 		return checkOneCmd("man", command, MANENTRYREG)
 	})
 }
 
 // WhichCommandFilter tries to use "which `Command`" cmd to judge `Command` is valid or not
-func WhichCommandFilter(commands []Command) []Command {
+func WhichCommandFilter(commands []model.Command) []model.Command {
 	return cmdsFilter(commands, func(command string) error {
 		return checkOneCmd("which", command, "")
 	})
@@ -130,7 +131,7 @@ func checkOneCmd(command, arg, reg string) error {
 	return nil
 }
 
-func cmdsFilter(commands []Command, execute func(string) error) []Command {
+func cmdsFilter(commands []model.Command, execute func(string) error) []model.Command {
 	var invalidNum []int
 	ec := make(chan errorNum, 1)
 	for commNum, command := range commands {

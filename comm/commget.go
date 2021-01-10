@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2021-01-05 17:19:16
+ * @LastEditTime: 2021-01-10 09:49:55
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -12,25 +12,28 @@ package comm
 import (
 	"bytes"
 	"commdetection/logger"
+	"commdetection/model"
 	"io/ioutil"
 	"os/exec"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 )
 
-// Command contains command and its flags or symbols
-type Command struct {
-	CommName  string    `json:"commName"`
-	Args      []string  `json:"args"`
-	Flags     []string  `json:"flags"`
-	TimeStamp time.Time `json:"timestamp"`
-	User      string    `json:"user"`
-	Mac       string    `json:"mac"`
+// GetCommands returns a list of commands preprocessed which first get commands from file then net
+func GetCommands() []model.Command {
+	commands, err := getCommandsFromHist()
+	if err != nil {
+		logger.Warnln(err)
+		return []model.Command{}
+	}
+	sort.Sort(commands)
+	return commands
 }
 
-// GetCommandsFromHist gets the commands by using `history` bash command
-func GetCommandsFromHist() ([]Command, error) {
+// getCommandsFromHist gets the commands by using `history` bash command
+func getCommandsFromHist() (model.Commands, error) {
 	var (
 		stderr bytes.Buffer
 		stdout bytes.Buffer
@@ -39,15 +42,18 @@ func GetCommandsFromHist() ([]Command, error) {
 	hist.Stderr = &stderr
 	hist.Stdout = &stdout
 	err := hist.Run()
+	if err != nil {
+		return nil, err
+	}
 	commands := commandsFromString(stdout.String())
-	return commands, err
+	return commands, nil
 }
 
-func commandsFromString(s string) []Command {
-	var commands []Command
+func commandsFromString(s string) model.Commands {
+	var commands model.Commands
 	commLines := strings.Split(s, "\n")
 	for _, comm := range commLines {
-		newComm := Command{}
+		newComm := model.Command{}
 		var timestamp string
 		for num, commArg := range strings.Fields(comm) {
 			if _, err := strconv.Atoi(commArg); err != nil && num == 0 {
@@ -59,18 +65,18 @@ func commandsFromString(s string) []Command {
 			case num == 1:
 				timestamp = commArg
 			case num == 2:
-				timestamp += " " + commArg
+				timestamp += " " + commArg // create the timestamp string to parse
 				var err error
 				newComm.TimeStamp, err = time.Parse("2006-01-02 15:04:05", timestamp)
 				if err != nil {
 					newComm.TimeStamp = time.Time{}
 				}
 			case num == 3:
-				newComm.Mac = commArg
+				newComm.Mac = commArg // comm[3] arg is Mac Address
 			case num == 4:
-				newComm.User = commArg
+				newComm.User = commArg // comm[4] arg is Username
 			case num == 5:
-				newComm.CommName = commArg
+				newComm.CommName = commArg // comm[5] arg is command name
 			default:
 				if commArg[0] != '-' { // comm is a flag
 					newComm.Args = append(newComm.Args, commArg)
@@ -86,21 +92,15 @@ func commandsFromString(s string) []Command {
 	return commands
 }
 
-// GetCommands returns a list of commands preprocessed which first get commands from file then net
-//
-// If file and url is set to null, GetCommands will call getCommandsFromHistory func automatically
-//TODO: Will temporarily use GetCommandsFromHist to replace GetCommands, will put commands in the mongo db later
-func GetCommands() []Command {
-	commands, err := GetCommandsFromHist()
-	if err != nil {
-		logger.Warnln(err)
-		return []Command{}
-	}
-	return commands
+// TODO: will promote it later
+func getCommandsFromDB() (model.Commands, error) {
+	commands := new(model.Commands)
+	commands.GetCommandsFrom("test", "commands")
+	return *commands, nil
 }
 
-func getCommandsFromFile(f string) ([]Command, error) {
-	var commands []Command
+func getCommandsFromFile(f string) ([]model.Command, error) {
+	var commands []model.Command
 	buf, err := ioutil.ReadFile(f)
 	if err != nil {
 		return nil, err
@@ -112,9 +112,9 @@ func getCommandsFromFile(f string) ([]Command, error) {
 	return commands, nil
 }
 
-func splitCommandsInLine(tComm []string) []Command {
-	commands := []Command{}
-	newComm := Command{}
+func splitCommandsInLine(tComm []string) []model.Command {
+	commands := []model.Command{}
+	newComm := model.Command{}
 	for commNum, comm := range tComm {
 		if commNum == 0 {
 			newComm.CommName = comm
@@ -128,12 +128,7 @@ func splitCommandsInLine(tComm []string) []Command {
 		}
 	}
 	if newComm.CommName != "" {
-		commands = append([]Command{newComm}, commands...)
+		commands = append([]model.Command{newComm}, commands...)
 	}
 	return commands
-}
-
-// TODO: ready to develop until API is given
-func getCommandsFromNet(url string) ([]Command, error) {
-	return nil, nil
 }

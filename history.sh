@@ -1,9 +1,9 @@
 ###
  # @Author: EnderbyEndera
  # @Date: 2021-01-05 15:36:26
- # @LastEditTime: 2021-01-05 17:23:34
+ # @LastEditTime: 2021-01-05 18:15:26
  # @LastEditors: Please set LastEditors
- # @Description: In User Settings Edit
+ # @Description: history.sh is used in the commget.go to get history commands in the host with the defined format
  # @FilePath: /commdetection/history.sh
 ### 
 

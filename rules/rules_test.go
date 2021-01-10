@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-04 15:03:09
- * @LastEditTime: 2021-01-05 17:19:26
+ * @LastEditTime: 2021-01-06 09:59:08
  * @LastEditors: Please set LastEditors
  * @Description: Test commrules.go
  * @FilePath: /commdetection/rules/commrules_test.go
@@ -58,7 +58,7 @@ func TestRule(t *testing.T) {
 			}
 		}
 		cs := model.CommScore{
-			Command: comm.Command{CommName: "wget"},
+			Command: model.Command{CommName: "wget"},
 			Score:   100,
 		}
 		for _, rule := range r {
@@ -136,7 +136,7 @@ func TestInitCommScores(t *testing.T) {
 func TestEvaluateCommScore(t *testing.T) {
 	css := EvaluateCommScore([]model.CommScore{
 		{
-			Command: comm.Command{
+			Command: model.Command{
 				CommName: "wget",
 				Args:     []string{""},
 			},

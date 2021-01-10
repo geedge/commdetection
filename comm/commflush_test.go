@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:51:28
- * @LastEditTime: 2021-01-05 17:10:16
+ * @LastEditTime: 2021-01-06 10:01:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/comm/commflush_test.go
@@ -9,6 +9,7 @@
 package comm
 
 import (
+	"commdetection/model"
 	"fmt"
 	"reflect"
 	"testing"
@@ -16,7 +17,7 @@ import (
 
 func TestFlushCommands(t *testing.T) {
 	t.Run("FlushCommands Test Using WhichCommandFilter", func(t *testing.T) {
-		commands := []Command{
+		commands := []model.Command{
 			{
 				CommName: "wget",
 				Args:     []string{},
@@ -46,7 +47,7 @@ func TestFlushCommands(t *testing.T) {
 				Args:     []string{},
 			},
 		}
-		predict := []Command{
+		predict := []model.Command{
 			{
 				CommName: "wget",
 				Args:     []string{},
@@ -72,9 +73,9 @@ func TestFlushCommands(t *testing.T) {
 	})
 
 	t.Run("FlushCommands with no commands", func(t *testing.T) {
-		commands := []Command{}
+		commands := []model.Command{}
 		commands = FlushCommands(commands, []Filter{WhichCommandFilter})
-		if !reflect.DeepEqual(commands, []Command{}) {
+		if !reflect.DeepEqual(commands, []model.Command{}) {
 			fmt.Println(commands)
 			t.Errorf("results are not as predicted")
 		}

@@ -1,2 +1,5 @@
-ginmode: release
-port: 8060
+gin:
+  ginmode: release
+  port: 8060
+mongo:
+  timeout: 10s

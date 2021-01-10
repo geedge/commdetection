@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 11:28:49
- * @LastEditTime: 2021-01-05 17:19:57
+ * @LastEditTime: 2021-01-06 09:59:40
  * @LastEditors: Please set LastEditors
  * @Description: Test UnmarshalSetting and MarshalSetting
  * @FilePath: /commdetection/rules/rulestype_test.go
@@ -19,7 +19,7 @@ import (
 func TestEvaluateCommandRule(t *testing.T) {
 	t.Run("Test Normal Command Rule Evaluation", func(t *testing.T) {
 		cs := model.CommScore{
-			Command: comm.Command{
+			Command: model.Command{
 				CommName: "wget",
 				Args:     []string{"https://127.0.0.1:8080"},
 			},
@@ -35,7 +35,7 @@ func TestEvaluateCommandRule(t *testing.T) {
 func TestEvaluatePathRule(t *testing.T) {
 	t.Run("Test Normal Path Rule Evaluation", func(t *testing.T) {
 		cs := model.CommScore{
-			Command: comm.Command{
+			Command: model.Command{
 				CommName: "wget",
 				Args:     []string{"rules.json"},
 			},
@@ -53,7 +53,7 @@ func TestEvaluatePathRule(t *testing.T) {
 func TestEvaluateWebsiteRule(t *testing.T) {
 	t.Run("Test Evaluating Website Rule", func(t *testing.T) {
 		cs := model.CommScore{
-			Command: comm.Command{
+			Command: model.Command{
 				CommName: "wget",
 				Args:     []string{"https://golang.org/"},
 				Flags:    []string{},
