@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2021-01-06 15:26:48
- * @LastEditTime: 2021-01-10 16:26:32
+ * @LastEditTime: 2021-01-12 16:49:55
  * @LastEditors: Please set LastEditors
  * @Description: test mongo.go
  * @FilePath: /commdetection/model/mongo_test.go
@@ -10,22 +10,20 @@
 package model
 
 import (
-	"sort"
 	"testing"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TestGetCommandsFromMongo(t *testing.T) {
-	commands := new(Commands)
+	commands := Commands{}
 	err := commands.GetCommandsFrom("test", "commands")
 	if err != nil {
 		t.Error(err)
 	}
 	if commands == nil || commands.Len() == 0 {
 		t.Error("Commands are nil commands")
-	}
-	if !sort.IsSorted(commands) {
-		t.Error("Commands are not sorted")
 	}
 }
 
@@ -66,6 +64,22 @@ func TestInsertCommandsToMongo(t *testing.T) {
 			t.Error(err)
 		}
 	})
+}
+
+func TestUpdateCommandsToMongo(t *testing.T) {
+	commands := Commands{
+		{
+			CommName:  "vim",
+			Args:      []string{},
+			Flags:     []string{},
+			TimeStamp: time.Now(),
+			User:      "root",
+		},
+	}
+	err := commands.UpdateAnyTo("test", "commands", 0, bson.D{{"commname", "wget"}})
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func TestDeleteCommandsFromMongo(t *testing.T) {

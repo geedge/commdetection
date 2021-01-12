@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-16 14:31:00
- * @LastEditTime: 2021-01-04 18:45:21
+ * @LastEditTime: 2021-01-11 10:26:26
  * @LastEditors: Please set LastEditors
  * @Description: Test marshalling.go
  * @FilePath: /commdetection/rules/marshalling_test.go
