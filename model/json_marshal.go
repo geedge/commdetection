@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-05 10:37:28
- * @LastEditTime: 2021-01-10 09:39:58
+ * @LastEditTime: 2021-01-14 09:32:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/model/marshal_and_unmarshal.go
@@ -21,7 +21,6 @@ import (
 	"commdetection/logger"
 	"commdetection/yaml"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -65,7 +64,7 @@ func UnmarshalEvaluationRules() (r Rules, err error) {
 	}
 	err = unmarshalSetting(fileName, r)
 	if err != nil {
-		fmt.Printf("json file settings conversion to %s failed, please check json file %s is correct or not", reflect.TypeOf(r).Name(), fileName)
+		logger.Warnf("json file settings conversion to %s failed, please check json file %s is correct or not", reflect.TypeOf(r).Name(), fileName)
 	}
 	return
 }

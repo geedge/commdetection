@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-23 13:17:08
- * @LastEditTime: 2021-01-05 17:54:33
+ * @LastEditTime: 2021-01-19 12:06:31
  * @LastEditors: Please set LastEditors
  * @Description: router.go defines gin.Engine and its router
  * @FilePath: /commdetection/route/router.go
@@ -30,7 +30,6 @@ func init() {
 		logger.Warnln(err)
 	}
 	gin.SetMode(ginmode)
-	logger.Debugf("Sets Gin mode to \"%s\" mode", ginmode)
 
 	router = gin.New()
 	router.Use(gin.Recovery())
@@ -55,7 +54,8 @@ var (
 
 // StartRouter starts and sets ending method for gin engine
 func StartRouter() {
-
+	ginmode, _ := yaml.GetGinMode()
+	logger.Debugf("Sets gin mode to \"%s\"", ginmode)
 	go func() {
 		// engine start on http://127.0.0.1:8000
 		logger.Debugln("Server started at", srv.Addr)
@@ -88,17 +88,17 @@ func manageRouter() {
 	}
 	commr := router.Group("/commrules")
 	{
-		commr.POST("/setrules", setCommrulesEndpoint)
-		commr.GET("/getrules", getCommrulesEndpoint)
+		commr.POST("/set", setCommrulesEndpoint)
+		commr.GET("/get", getCommrulesEndpoint)
 	}
 	pathr := router.Group("/pathrules")
 	{
-		pathr.POST("/setrules", setPathrulesEndpoint)
-		pathr.GET("/getrules", getPathrulesEndpoint)
+		pathr.POST("/set", setPathrulesEndpoint)
+		pathr.GET("/get", getPathrulesEndpoint)
 	}
 	rsr := router.Group("/rules")
 	{
-		rsr.POST("/setrules", setEvaluationRulesEndpoint)
-		rsr.GET("/getrules", getEvaluationRulesEndpoint)
+		rsr.POST("/set", setEvaluationRulesEndpoint)
+		rsr.GET("/get", getEvaluationRulesEndpoint)
 	}
 }

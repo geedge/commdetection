@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-03 12:51:28
- * @LastEditTime: 2021-01-06 10:01:49
+ * @LastEditTime: 2021-01-16 08:41:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/comm/commflush_test.go
@@ -80,6 +80,18 @@ func TestFlushCommands(t *testing.T) {
 			t.Errorf("results are not as predicted")
 		}
 	})
+
+	t.Run("FlushCommands with mongodb", func(t *testing.T) {
+		comms := GetCommands()
+		comms = FlushCommands(comms, []Filter{WhichCommandFilter})
+		commands := model.Commands(comms)
+		err := commands.InsertAllTo("test", "commands")
+		err = commands.InsertAllTo("test", "commands")
+		if err != nil {
+			t.Error(err)
+		}
+
+	})
 }
 
 func BenchmarkFlushCommands(b *testing.B) {
@@ -90,4 +102,11 @@ func BenchmarkFlushCommands(b *testing.B) {
 		commands = FlushCommands(commands, filters)
 		b.StopTimer()
 	})
+}
+
+func BenchmarkInsertFromMongo(b *testing.B) {
+	commands := GetCommands()
+	commands = FlushCommands(commands, []Filter{WhichCommandFilter})
+	commands.InsertAllTo("test", "commands")
+	commands.InsertAllTo("test", "commands")
 }

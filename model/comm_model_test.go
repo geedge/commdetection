@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2021-01-06 15:26:48
- * @LastEditTime: 2021-01-12 16:49:55
+ * @LastEditTime: 2021-01-19 11:57:21
  * @LastEditors: Please set LastEditors
  * @Description: test mongo.go
  * @FilePath: /commdetection/model/mongo_test.go
@@ -10,6 +10,7 @@
 package model
 
 import (
+	"reflect"
 	"testing"
 	"time"
 
@@ -30,18 +31,30 @@ func TestGetCommandsFromMongo(t *testing.T) {
 func TestInsertCommandsToMongo(t *testing.T) {
 	t.Run("Test InsertManyTo func", func(t *testing.T) {
 		commands := Commands{}
+		now := time.Now()
 		for i := 0; i < 10; i++ {
 			commands = append(commands, Command{
 				CommName:  "wget",
 				Args:      []string{},
 				Flags:     []string{},
-				TimeStamp: time.Now(),
+				TimeStamp: now,
 				User:      "root",
+				Mac:       "25:21:4A:1A:4C:11",
 			})
 		}
 		err := commands.InsertAllTo("test", "commands")
 		if err != nil {
 			t.Error(err)
+		}
+		commands.InsertAllTo("test", "commands")
+		if err != nil {
+			t.Error(err)
+		}
+		commands.GetCommandsFrom("test", "commands")
+		for i := 0; i < commands.Len()-1; i++ {
+			if reflect.DeepEqual(commands[i], commands[i+1]) {
+				t.Error("commands has same data")
+			}
 		}
 	})
 
@@ -76,6 +89,8 @@ func TestUpdateCommandsToMongo(t *testing.T) {
 			User:      "root",
 		},
 	}
+	_ = commands.InsertAnyTo("test", "commands", 0)
+
 	err := commands.UpdateAnyTo("test", "commands", 0, bson.D{{"commname", "wget"}})
 	if err != nil {
 		t.Error(err)

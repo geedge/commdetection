@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-19 11:59:02
- * @LastEditTime: 2021-01-06 09:51:43
+ * @LastEditTime: 2021-01-15 07:16:12
  * @LastEditors: Please set LastEditors
  * @Description: root of the commdetection cmd
  * @FilePath: /commdetection/cmd/root.go
@@ -89,8 +89,11 @@ func root() {
 
 	go func() {
 		for {
-			comms := comm.GetCommands()
+			var comms model.Commands
+			comms = comm.GetCommands()
 			comms = comm.FlushCommands(comms, filters)
+			comms.InsertAllTo("test", "commands")
+			comms.GetCommandsFrom("test", "commands")
 			css := rules.InitCommScores(comms)
 			css = rules.EvaluateCommScore(css, rs)
 			jsonBuf, _ := json.Marshal(css)

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 09:56:18
- * @LastEditTime: 2021-01-12 16:49:24
+ * @LastEditTime: 2021-01-19 12:02:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/model/comm_model.go
@@ -19,6 +19,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+//IntSlice includes a list of n array in order to use sort.Sort() method to sort n
+type IntSlice []int
+
+func (s IntSlice) Len() int           { return len(s) }
+func (s IntSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s IntSlice) Less(i, j int) bool { return s[i] > s[j] }
 
 // Command contains command and its flags or symbols
 type Command struct {
@@ -56,6 +63,23 @@ func (c Commands) Has(command Command) bool {
 	return true
 }
 
+// removeOneCommand removes only one command from the list given the index
+func removeOneCommand(commands []Command, n int) []Command {
+	return append(commands[:n], commands[n+1:]...)
+}
+
+// RemoveCommands removes a list of commands using index
+func RemoveCommands(commands []Command, n IntSlice) []Command {
+	if len(n) == 0 {
+		return commands
+	}
+	sort.Sort(n)
+	for i := range n {
+		commands = removeOneCommand(commands, n[i])
+	}
+	return commands
+}
+
 // GetCommandsFrom gets all the commands in the mongodb collections
 func (c *Commands) GetCommandsFrom(dbName string, cName string) error {
 	return mongoOpsWithoutIndex(getCommandsFromFn, opParams{
@@ -73,10 +97,10 @@ func getCommandsFromFn(sc mongo.SessionContext) error {
 	}
 	collection := client.Database(params.dbName).Collection(params.cName)
 	cur, err := collection.Find(sc, bson.D{})
-	defer cur.Close(sc)
 	if err != nil {
 		return err
 	}
+	defer cur.Close(sc)
 	for cur.Next(sc) {
 		var next Command
 		err := cur.Decode(&next)
@@ -103,16 +127,34 @@ func insertAllCommandsToFn(sc mongo.SessionContext) error {
 	if !ok {
 		return fmt.Errorf("Error tranfering the params")
 	}
+	if params.commands.Len() == 0 {
+		return nil
+	}
+
+	var deleteIndexes []int
+	for i := 0; i < params.commands.Len()-1; i++ {
+		if reflect.DeepEqual((*params.commands)[i], (*params.commands)[i+1]) {
+			deleteIndexes = append(deleteIndexes, i)
+		}
+	}
+	*params.commands = RemoveCommands(*params.commands, deleteIndexes)
 	collections := client.Database(params.dbName).Collection(params.cName)
 	var documents []interface{}
 	for _, command := range *params.commands {
-		documents = append(documents, command)
+		// if the command is not found in the mongodb
+		if res := collections.FindOne(sc, command); res.Err() == mongo.ErrNoDocuments {
+			// add the command to the ready-inserted documents
+			documents = append(documents, command)
+		}
 	}
-	res, err := collections.InsertMany(sc, documents)
+	// If every command is inserted into the db, documents may be nil
+	if documents == nil {
+		return nil
+	}
+	_, err := collections.InsertMany(sc, documents)
 	if err != nil {
 		return err
 	}
-	logger.Debugln("Insert succeeded, Ids are ", res)
 	return nil
 }
 
@@ -133,11 +175,13 @@ func insertAnyCommandToFn(sc mongo.SessionContext) error {
 		return fmt.Errorf("Error transfering the params")
 	}
 	collections := client.Database(params.dbName).Collection(params.cName)
-	res, err := collections.InsertOne(sc, (*params.commands)[int(params.index)])
+	if res := collections.FindOne(sc, (*params.commands)[int(params.index)]); res.Err() != mongo.ErrNoDocuments {
+		return nil
+	}
+	_, err := collections.InsertOne(sc, (*params.commands)[int(params.index)])
 	if err != nil {
 		return err
 	}
-	logger.Debugln("Insert succeeded, Id is ", res)
 	return nil
 }
 
@@ -160,14 +204,17 @@ func updateAnyCommandFn(sc mongo.SessionContext) error {
 	}
 	collection := client.Database(params.dbName).Collection(params.cName)
 	command := (*params.commands)[int(params.index)]
-	res, err := collection.UpdateOne(sc, params.updateFilter, bson.D{{
+	// if the command is found in the mongodb, update will be useless, so return nil
+	if res := collection.FindOne(sc, command); res.Err() != mongo.ErrNoDocuments {
+		return nil
+	}
+	_, err := collection.UpdateOne(sc, params.updateFilter, bson.D{{
 		"$set",
 		command,
 	}})
 	if err != nil {
 		return err
 	}
-	logger.Debugln("update succeeded, id is ", res)
 	return nil
 }
 
@@ -188,11 +235,10 @@ func deleteOneCommandFromFn(sc mongo.SessionContext) error {
 		return fmt.Errorf("Error transfering the params")
 	}
 	collections := client.Database(params.dbName).Collection(params.cName)
-	res, err := collections.DeleteOne(sc, (*params.commands)[int(params.index)])
+	_, err := collections.DeleteOne(sc, (*params.commands)[int(params.index)])
 	if err != nil {
 		return err
 	}
-	logger.Debugln("Delete succeeded, Id is ", res)
 	return nil
 }
 
@@ -220,6 +266,5 @@ func deleteAllCommandsFromFn(sc mongo.SessionContext) error {
 		}
 		deleteResults = append(deleteResults, res)
 	}
-	logger.Debugln("Delete succeeded, ids are ", deleteResults)
 	return nil
 }

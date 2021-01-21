@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2021-01-10 09:49:55
+ * @LastEditTime: 2021-01-16 08:39:11
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -22,7 +22,7 @@ import (
 )
 
 // GetCommands returns a list of commands preprocessed which first get commands from file then net
-func GetCommands() []model.Command {
+func GetCommands() model.Commands {
 	commands, err := getCommandsFromHist()
 	if err != nil {
 		logger.Warnln(err)

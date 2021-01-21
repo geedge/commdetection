@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-07 09:22:53
- * @LastEditTime: 2021-01-05 13:27:31
+ * @LastEditTime: 2021-01-14 15:31:24
  * @LastEditors: Please set LastEditors
  * @Description: this file flushes invalid commands using various types of filters
  * @FilePath: /commdetection/commflush.go
@@ -15,7 +15,6 @@ import (
 	"errors"
 	"os/exec"
 	"regexp"
-	"sort"
 	"time"
 )
 
@@ -28,13 +27,6 @@ const MANENTRYREG = "No manual entry for (.*)"
 // Filter defines filter function to clean invalid commadns or ops given by file or net
 type Filter func([]model.Command) []model.Command
 
-//IntSlice includes a list of n array in order to use sort.Sort() method to sort n
-type IntSlice []int
-
-func (s IntSlice) Len() int           { return len(s) }
-func (s IntSlice) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s IntSlice) Less(i, j int) bool { return s[i] > s[j] }
-
 type errorNum struct {
 	err error
 	num int
@@ -44,23 +36,6 @@ type errorNum struct {
 func FlushCommands(commands []model.Command, filters []Filter) []model.Command {
 	for _, filter := range filters {
 		commands = filter(commands)
-	}
-	return commands
-}
-
-// removeOneCommand removes only one command from the list given the index
-func removeOneCommand(commands []model.Command, n int) []model.Command {
-	return append(commands[:n], commands[n+1:]...)
-}
-
-// removeCommands removes a list of commands using index
-func removeCommands(commands []model.Command, n IntSlice) []model.Command {
-	if len(n) == 0 {
-		return commands
-	}
-	sort.Sort(n)
-	for i := range n {
-		commands = removeOneCommand(commands, n[i])
 	}
 	return commands
 }
@@ -144,5 +119,5 @@ func cmdsFilter(commands []model.Command, execute func(string) error) []model.Co
 			invalidNum = append(invalidNum, e.num)
 		}
 	}
-	return removeCommands(commands, invalidNum)
+	return model.RemoveCommands(commands, invalidNum)
 }

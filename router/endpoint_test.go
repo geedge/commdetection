@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-28 16:05:24
- * @LastEditTime: 2021-01-05 15:52:59
+ * @LastEditTime: 2021-01-19 12:05:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/router/endpoint_test.go
@@ -69,7 +69,7 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	t.Run("Test getCommrulesEndpoint", func(t *testing.T) {
-		e.GET("/commrules/getrules").
+		e.GET("/commrules/get").
 			Expect().
 			Status(http.StatusOK).
 			JSON().Object().
@@ -80,7 +80,7 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	t.Run("Test setCommrulesEndpoint", func(t *testing.T) {
-		e.POST("/commrules/setrules").
+		e.POST("/commrules/set").
 			WithJSON(testscomms).
 			Expect().
 			Status(http.StatusOK).
@@ -88,7 +88,7 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	t.Run("Test getPathrulesEndpoint", func(t *testing.T) {
-		e.GET("/pathrules/getrules").
+		e.GET("/pathrules/get").
 			Expect().
 			Status(http.StatusOK).
 			JSON().Object().
@@ -98,7 +98,7 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	t.Run("Test setPathrulesEndpoint", func(t *testing.T) {
-		e.POST("/pathrules/setrules").
+		e.POST("/pathrules/set").
 			WithJSON(testspaths).
 			Expect().
 			Status(http.StatusOK).
@@ -107,7 +107,7 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	t.Run("Test getEvaluationRulesEndpoint", func(t *testing.T) {
-		e.GET("/rules/getrules").
+		e.GET("/rules/get").
 			Expect().
 			Status(http.StatusOK).
 			JSON().Object().
@@ -117,7 +117,7 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	t.Run("Test setEvaluationRulesEndpoint", func(t *testing.T) {
-		e.POST("/rules/setrules").
+		e.POST("/rules/set").
 			WithJSON(testrs).
 			Expect().
 			Status(http.StatusOK).
@@ -144,29 +144,29 @@ func BenchmarkEndpoint(b *testing.B) {
 	})
 
 	b.Run("Benchmark getCommrulesEndpoint", func(b *testing.B) {
-		e.GET("/commrules/getrules").Expect()
+		e.GET("/commrules/get").Expect()
 	})
 
 	b.Run("Benchmark setCommrulesEndpoint", func(b *testing.B) {
-		e.POST("/commrules/setrules").
+		e.POST("/commrules/set").
 			WithJSON(testscomms).Expect()
 	})
 
 	b.Run("Benchmark getPathrulesEndpoint", func(b *testing.B) {
-		e.GET("/pathrules/getrules").Expect()
+		e.GET("/pathrules/get").Expect()
 	})
 
 	b.Run("Benchmark setPathrulesEndpoint", func(b *testing.B) {
-		e.POST("/pathrules/setrules").
+		e.POST("/pathrules/set").
 			WithJSON(testspaths).Expect()
 	})
 
 	b.Run("Benchmark getEvaluationRulesEndpoint", func(b *testing.B) {
-		e.GET("/rules/getrules").Expect()
+		e.GET("/rules/get").Expect()
 	})
 
 	b.Run("Benchmark setEvaluationRulesEndpoint", func(b *testing.B) {
-		e.POST("rules/setrules").
+		e.POST("rules/set").
 			WithJSON(testrs).Expect()
 	})
 }
