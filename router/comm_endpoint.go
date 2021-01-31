@@ -1,11 +1,12 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2021-01-16 08:14:22
- * @LastEditTime: 2021-01-16 08:16:11
+ * @LastEditTime: 2021-02-01 06:27:20
  * @LastEditors: Please set LastEditors
  * @Description: comm_endpoint.go has the function for all the commands' endpoint
  * @FilePath: /commdetection/router/comm_endpoint.go
  */
+
 package router
 
 import (

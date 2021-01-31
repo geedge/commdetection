@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-08 11:28:49
- * @LastEditTime: 2021-01-06 09:59:40
+ * @LastEditTime: 2021-02-01 06:17:11
  * @LastEditors: Please set LastEditors
  * @Description: Test UnmarshalSetting and MarshalSetting
  * @FilePath: /commdetection/rules/rulestype_test.go

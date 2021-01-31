@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2021-01-16 08:12:49
- * @LastEditTime: 2021-01-16 08:16:53
+ * @LastEditTime: 2021-02-01 06:26:33
  * @LastEditors: Please set LastEditors
  * @Description: rule_endpoint has the function for all the command rules' endpoint, including getter and setter
  * @FilePath: /commdetection/router/rule_endpoint.go
@@ -128,6 +128,34 @@ func setEvaluationRulesEndpoint(c *gin.Context) {
 		return
 	}
 	if err := model.MarshalEvaluationRules(rs); err != nil {
+		handleErr(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}
+
+func getWebsiteRuleEndpoint(c *gin.Context) {
+	ussites, err := model.UnMarshalUnsensitiveWebsiteSetting()
+	if err != nil {
+		handleErr(c, err)
+		return
+	}
+	logger.Debugln("Start to send spaths to the front end")
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+		"ussites": ussites,
+	})
+}
+
+func setWebsiteRuleEndpoint(c *gin.Context) {
+	ussites := model.Ussites{}
+	if err := c.ShouldBind(&ussites); err != nil {
+		handleErr(c, err)
+		return
+	}
+	if err := model.MarshalUnsensitiveWebsiteSetting(ussites); err != nil {
 		handleErr(c, err)
 		return
 	}

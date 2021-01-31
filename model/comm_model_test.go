@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2021-01-06 15:26:48
- * @LastEditTime: 2021-01-19 11:57:21
+ * @LastEditTime: 2021-02-01 07:03:10
  * @LastEditors: Please set LastEditors
  * @Description: test mongo.go
  * @FilePath: /commdetection/model/mongo_test.go
@@ -108,7 +108,7 @@ func TestDeleteCommandsFromMongo(t *testing.T) {
 				User:      "root",
 			},
 		}
-		err := commands.InsertAnyTo("test", "commands", 0)
+		err := commands.InsertAllTo("test", "commands")
 		if err != nil {
 			t.Error(err)
 		}

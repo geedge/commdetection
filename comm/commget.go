@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-02 17:08:59
- * @LastEditTime: 2021-01-16 08:39:11
+ * @LastEditTime: 2021-02-01 06:54:12
  * @LastEditors: Please set LastEditors
  * @Description: Get commands from file or network
  * @FilePath: /commdetection/preprocessing/commget.go
@@ -13,6 +13,7 @@ import (
 	"bytes"
 	"commdetection/logger"
 	"commdetection/model"
+	"commdetection/yaml"
 	"io/ioutil"
 	"os/exec"
 	"sort"
@@ -92,10 +93,9 @@ func commandsFromString(s string) model.Commands {
 	return commands
 }
 
-// TODO: will promote it later
 func getCommandsFromDB() (model.Commands, error) {
 	commands := new(model.Commands)
-	commands.GetCommandsFrom("test", "commands")
+	commands.GetCommandsFrom(yaml.GetMongoSetting().Db, yaml.GetMongoSetting().Collection)
 	return *commands, nil
 }
 

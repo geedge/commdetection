@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-09 16:44:44
- * @LastEditTime: 2021-01-06 12:40:04
+ * @LastEditTime: 2021-02-01 06:43:21
  * @LastEditors: Please set LastEditors
  * @Description: Init settings from yaml file
  * @FilePath: /commdetection/init/init.go
@@ -22,11 +22,13 @@ import (
 
 // MongoSet is the setting for the mongo db connection
 type MongoSet struct {
-	Host    string `yaml:"host"`
-	Port    uint16 `yaml:"port"`
-	User    string `yaml:"user"`
-	Pwd     string `yaml:"password"`
-	Timeout string `yaml:"timeout"`
+	Host       string `yaml:"host"`
+	Port       uint16 `yaml:"port"`
+	Db         string `yaml:"db"`
+	Collection string `yaml:"collection"`
+	User       string `yaml:"user"`
+	Pwd        string `yaml:"password"`
+	Timeout    string `yaml:"timeout"`
 }
 
 // RulePaths is the rule paths
@@ -75,6 +77,12 @@ func GetMongoSetting() MongoSet {
 	}
 	if conf.Mongo.Timeout == "" {
 		conf.Mongo.Timeout = "30s"
+	}
+	if conf.Mongo.Db == "" {
+		conf.Mongo.Db = "test"
+	}
+	if conf.Mongo.Collection == "" {
+		conf.Mongo.Collection = "commands"
 	}
 	return conf.Mongo
 }

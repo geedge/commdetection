@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2020-12-23 13:17:08
- * @LastEditTime: 2021-01-19 12:06:31
+ * @LastEditTime: 2021-02-01 06:27:01
  * @LastEditors: Please set LastEditors
  * @Description: router.go defines gin.Engine and its router
  * @FilePath: /commdetection/route/router.go
@@ -95,6 +95,11 @@ func manageRouter() {
 	{
 		pathr.POST("/set", setPathrulesEndpoint)
 		pathr.GET("/get", getPathrulesEndpoint)
+	}
+	usiter := router.Group("/websiterules")
+	{
+		usiter.POST("/set", setWebsiteRuleEndpoint)
+		usiter.GET("/get", getWebsiteRuleEndpoint)
 	}
 	rsr := router.Group("/rules")
 	{

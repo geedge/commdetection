@@ -2,4 +2,6 @@ gin:
   ginmode: release
   port: 8060
 mongo:
+  host: 101.37.27.155
   timeout: 10s
+  port: 27017

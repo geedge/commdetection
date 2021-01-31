@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-01-06 09:56:18
- * @LastEditTime: 2021-01-19 12:02:23
+ * @LastEditTime: 2021-02-01 06:46:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /commdetection/model/comm_model.go

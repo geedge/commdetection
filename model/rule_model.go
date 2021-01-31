@@ -1,7 +1,7 @@
 /*
  * @Author: EnderByEndera
  * @Date: 2021-01-04 16:30:53
- * @LastEditTime: 2021-01-12 11:53:39
+ * @LastEditTime: 2021-02-01 06:23:02
  * @LastEditors: Please set LastEditors
  * @Description: This is the model file used for rules pack
  * @FilePath: /commdetection/model/rule_model.go
